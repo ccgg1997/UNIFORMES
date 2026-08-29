@@ -14,6 +14,7 @@ Thumbs.db
 *.log
 *.tsbuildinfo
 /.playwright-cli/
+/.playwright-mcp/
 /output/
 
 # Source material kept outside the public website.

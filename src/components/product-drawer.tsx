@@ -31,10 +31,8 @@ export function ProductDrawer({
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       // la ampliación se cierra primero: el drawer sigue abierto detrás
-      setZoom((open) => {
-        if (!open) onClose();
-        return false;
-      });
+      if (zoom) setZoom(false);
+      else onClose();
     };
     document.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
@@ -42,7 +40,7 @@ export function ProductDrawer({
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
-  }, [product, onClose]);
+  }, [product, onClose, zoom]);
 
   if (!product) return null;
 
