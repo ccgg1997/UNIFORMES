@@ -1,0 +1,630 @@
+{
+  "updatedAt": "2026-08-29T16:25:49.043Z",
+  "products": [
+    {
+      "odooName": "BLUSA DIARIO NIÑA (DEBAJO)",
+      "sizes": [
+        {
+          "odooId": 27,
+          "size": "S",
+          "price": 34000,
+          "stock": 15
+        },
+        {
+          "odooId": 28,
+          "size": "M",
+          "price": 34000,
+          "stock": 19
+        },
+        {
+          "odooId": 29,
+          "size": "L",
+          "price": 34000,
+          "stock": 28
+        },
+        {
+          "odooId": 30,
+          "size": "XL",
+          "price": 34000,
+          "stock": 24
+        },
+        {
+          "odooId": 31,
+          "size": "6",
+          "price": 28000,
+          "stock": 25
+        },
+        {
+          "odooId": 32,
+          "size": "8",
+          "price": 28000,
+          "stock": 21
+        },
+        {
+          "odooId": 35,
+          "size": "10",
+          "price": 28000,
+          "stock": 15
+        },
+        {
+          "odooId": 33,
+          "size": "12",
+          "price": 28000,
+          "stock": 14
+        },
+        {
+          "odooId": 36,
+          "size": "14",
+          "price": 28000,
+          "stock": 6
+        },
+        {
+          "odooId": 34,
+          "size": "16",
+          "price": 28000,
+          "stock": 20
+        }
+      ]
+    },
+    {
+      "odooName": "CAMIBUSO COMFANDI",
+      "sizes": [
+        {
+          "odooId": 117,
+          "size": "S",
+          "price": 36000,
+          "stock": 3
+        },
+        {
+          "odooId": 118,
+          "size": "M",
+          "price": 36000,
+          "stock": 3
+        },
+        {
+          "odooId": 119,
+          "size": "L",
+          "price": 36000,
+          "stock": 3
+        },
+        {
+          "odooId": 120,
+          "size": "XL",
+          "price": 36000,
+          "stock": 2
+        },
+        {
+          "odooId": 121,
+          "size": "6",
+          "price": 32000,
+          "stock": 10
+        },
+        {
+          "odooId": 122,
+          "size": "8",
+          "price": 32000,
+          "stock": 11
+        },
+        {
+          "odooId": 123,
+          "size": "10",
+          "price": 32000,
+          "stock": 6
+        },
+        {
+          "odooId": 124,
+          "size": "12",
+          "price": 32000,
+          "stock": 5
+        },
+        {
+          "odooId": 125,
+          "size": "14",
+          "price": 32000,
+          "stock": 5
+        },
+        {
+          "odooId": 126,
+          "size": "16",
+          "price": 32000,
+          "stock": 2
+        }
+      ]
+    },
+    {
+      "odooName": "CAMISA UNISEX ED. FISICA",
+      "sizes": [
+        {
+          "odooId": 37,
+          "size": "S",
+          "price": 38000,
+          "stock": 4
+        },
+        {
+          "odooId": 38,
+          "size": "M",
+          "price": 38000,
+          "stock": 14
+        },
+        {
+          "odooId": 39,
+          "size": "L",
+          "price": 38000,
+          "stock": 22
+        },
+        {
+          "odooId": 40,
+          "size": "XL",
+          "price": 38000,
+          "stock": 23
+        },
+        {
+          "odooId": 41,
+          "size": "6",
+          "price": 36000,
+          "stock": 8
+        },
+        {
+          "odooId": 42,
+          "size": "8",
+          "price": 36000,
+          "stock": 16
+        },
+        {
+          "odooId": 45,
+          "size": "10",
+          "price": 36000,
+          "stock": 18
+        },
+        {
+          "odooId": 43,
+          "size": "12",
+          "price": 36000,
+          "stock": 10
+        },
+        {
+          "odooId": 46,
+          "size": "14",
+          "price": 36000,
+          "stock": 1
+        },
+        {
+          "odooId": 44,
+          "size": "16",
+          "price": 36000,
+          "stock": 0
+        }
+      ]
+    },
+    {
+      "odooName": "GUAYABERA NIÑO GRUESA",
+      "sizes": [
+        {
+          "odooId": 92,
+          "size": "S",
+          "price": 44000,
+          "stock": 0
+        },
+        {
+          "odooId": 93,
+          "size": "M",
+          "price": 44000,
+          "stock": 7
+        },
+        {
+          "odooId": 94,
+          "size": "L",
+          "price": 44000,
+          "stock": 16
+        },
+        {
+          "odooId": 95,
+          "size": "XL",
+          "price": 44000,
+          "stock": 10
+        },
+        {
+          "odooId": 96,
+          "size": "6",
+          "price": 42000,
+          "stock": 10
+        },
+        {
+          "odooId": 97,
+          "size": "8",
+          "price": 42000,
+          "stock": 13
+        },
+        {
+          "odooId": 100,
+          "size": "10",
+          "price": 42000,
+          "stock": 7
+        },
+        {
+          "odooId": 98,
+          "size": "12",
+          "price": 42000,
+          "stock": 11
+        },
+        {
+          "odooId": 101,
+          "size": "14",
+          "price": 42000,
+          "stock": 5
+        },
+        {
+          "odooId": 99,
+          "size": "16",
+          "price": 42000,
+          "stock": 7
+        }
+      ]
+    },
+    {
+      "odooName": "GUAYABERA NIÑO NORMAL",
+      "sizes": [
+        {
+          "odooId": 47,
+          "size": "S",
+          "price": 38000,
+          "stock": 0
+        },
+        {
+          "odooId": 48,
+          "size": "M",
+          "price": 38000,
+          "stock": 3
+        },
+        {
+          "odooId": 49,
+          "size": "L",
+          "price": 38000,
+          "stock": 0
+        },
+        {
+          "odooId": 50,
+          "size": "XL",
+          "price": 38000,
+          "stock": 0
+        },
+        {
+          "odooId": 51,
+          "size": "6",
+          "price": 35000,
+          "stock": 0
+        },
+        {
+          "odooId": 52,
+          "size": "8",
+          "price": 35000,
+          "stock": 3
+        },
+        {
+          "odooId": 55,
+          "size": "10",
+          "price": 35000,
+          "stock": 4
+        },
+        {
+          "odooId": 53,
+          "size": "12",
+          "price": 35000,
+          "stock": 4
+        },
+        {
+          "odooId": 56,
+          "size": "14",
+          "price": 35000,
+          "stock": 5
+        },
+        {
+          "odooId": 54,
+          "size": "16",
+          "price": 35000,
+          "stock": 1
+        }
+      ]
+    },
+    {
+      "odooName": "JARDINERA NIÑA",
+      "sizes": [
+        {
+          "odooId": 57,
+          "size": "S",
+          "price": 72000,
+          "stock": 8
+        },
+        {
+          "odooId": 58,
+          "size": "M",
+          "price": 72000,
+          "stock": 4
+        },
+        {
+          "odooId": 59,
+          "size": "L",
+          "price": 72000,
+          "stock": 10
+        },
+        {
+          "odooId": 60,
+          "size": "XL",
+          "price": 77000,
+          "stock": 3
+        },
+        {
+          "odooId": 87,
+          "size": "2XL",
+          "price": 77000,
+          "stock": 6
+        },
+        {
+          "odooId": 61,
+          "size": "6",
+          "price": 69000,
+          "stock": 3
+        },
+        {
+          "odooId": 62,
+          "size": "8",
+          "price": 69000,
+          "stock": 4
+        },
+        {
+          "odooId": 65,
+          "size": "10",
+          "price": 69000,
+          "stock": 11
+        },
+        {
+          "odooId": 63,
+          "size": "12",
+          "price": 69000,
+          "stock": 7
+        },
+        {
+          "odooId": 66,
+          "size": "14",
+          "price": 69000,
+          "stock": 0
+        },
+        {
+          "odooId": 64,
+          "size": "16",
+          "price": 69000,
+          "stock": 0
+        }
+      ]
+    },
+    {
+      "odooName": "LOGO COLEGIO ARQUI",
+      "sizes": [
+        {
+          "odooId": 127,
+          "size": "COMPARTIR",
+          "price": 7000,
+          "stock": 31
+        },
+        {
+          "odooId": 128,
+          "size": "LLANO VERDE",
+          "price": 7000,
+          "stock": 15
+        }
+      ]
+    },
+    {
+      "odooName": "MEDIAS",
+      "sizes": [
+        {
+          "odooId": 103,
+          "size": "",
+          "price": 5000,
+          "stock": 0
+        }
+      ]
+    },
+    {
+      "odooName": "PANTALON DIARIO NIÑO",
+      "sizes": [
+        {
+          "odooId": 104,
+          "size": "4",
+          "price": 67000,
+          "stock": 12
+        },
+        {
+          "odooId": 67,
+          "size": "6",
+          "price": 67000,
+          "stock": 12
+        },
+        {
+          "odooId": 68,
+          "size": "8",
+          "price": 67000,
+          "stock": 4
+        },
+        {
+          "odooId": 74,
+          "size": "10",
+          "price": 67000,
+          "stock": 7
+        },
+        {
+          "odooId": 69,
+          "size": "12",
+          "price": 67000,
+          "stock": 0
+        },
+        {
+          "odooId": 75,
+          "size": "14",
+          "price": 67000,
+          "stock": 1
+        },
+        {
+          "odooId": 70,
+          "size": "16",
+          "price": 67000,
+          "stock": 3
+        },
+        {
+          "odooId": 71,
+          "size": "28",
+          "price": 69000,
+          "stock": 0
+        },
+        {
+          "odooId": 72,
+          "size": "30",
+          "price": 69000,
+          "stock": 4
+        },
+        {
+          "odooId": 73,
+          "size": "32",
+          "price": 69000,
+          "stock": 3
+        },
+        {
+          "odooId": 76,
+          "size": "34",
+          "price": 69000,
+          "stock": 7
+        }
+      ]
+    },
+    {
+      "odooName": "SUDADERA COMFANDI",
+      "sizes": [
+        {
+          "odooId": 112,
+          "size": "S",
+          "price": 55000,
+          "stock": 4
+        },
+        {
+          "odooId": 113,
+          "size": "M",
+          "price": 55000,
+          "stock": 3
+        },
+        {
+          "odooId": 114,
+          "size": "L",
+          "price": 55000,
+          "stock": 3
+        },
+        {
+          "odooId": 115,
+          "size": "XL",
+          "price": 55000,
+          "stock": 3
+        },
+        {
+          "odooId": 106,
+          "size": "6",
+          "price": 49000,
+          "stock": 7
+        },
+        {
+          "odooId": 107,
+          "size": "8",
+          "price": 49000,
+          "stock": 7
+        },
+        {
+          "odooId": 108,
+          "size": "10",
+          "price": 49000,
+          "stock": 5
+        },
+        {
+          "odooId": 109,
+          "size": "12",
+          "price": 49000,
+          "stock": 5
+        },
+        {
+          "odooId": 110,
+          "size": "14",
+          "price": 49000,
+          "stock": 5
+        },
+        {
+          "odooId": 111,
+          "size": "16",
+          "price": 49000,
+          "stock": 3
+        }
+      ]
+    },
+    {
+      "odooName": "SUDADERA ED. FISICA ARQUIDIOCESANOS",
+      "sizes": [
+        {
+          "odooId": 88,
+          "size": "S",
+          "price": 47000,
+          "stock": 5
+        },
+        {
+          "odooId": 89,
+          "size": "M",
+          "price": 47000,
+          "stock": 8
+        },
+        {
+          "odooId": 90,
+          "size": "L",
+          "price": 47000,
+          "stock": 15
+        },
+        {
+          "odooId": 91,
+          "size": "XL",
+          "price": 47000,
+          "stock": 20
+        },
+        {
+          "odooId": 77,
+          "size": "6",
+          "price": 43000,
+          "stock": 0
+        },
+        {
+          "odooId": 78,
+          "size": "8",
+          "price": 43000,
+          "stock": 11
+        },
+        {
+          "odooId": 84,
+          "size": "10",
+          "price": 43000,
+          "stock": 13
+        },
+        {
+          "odooId": 79,
+          "size": "12",
+          "price": 43000,
+          "stock": 11
+        },
+        {
+          "odooId": 85,
+          "size": "14",
+          "price": 43000,
+          "stock": 11
+        },
+        {
+          "odooId": 80,
+          "size": "16",
+          "price": 43000,
+          "stock": -1
+        }
+      ]
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { ProductCard } from "@/components/product-card";
 import { ProductDrawer } from "@/components/product-drawer";
 import { SectionHeading } from "@/components/section-heading";
-import { products, schools } from "@/data/products";
+import { schools } from "@/data/products";
 import type { Product, SchoolId } from "@/types/product";
 
 export type CatalogFilter = SchoolId | "todos";
@@ -20,8 +20,11 @@ const FILTERS: { id: CatalogFilter; label: string }[] = [
  * URL only seeds the first filter (see productsHref).
  */
 export function ProductsCatalog({
+  products,
   initialFilter = "todos",
 }: {
+  /** Ya vienen con el precio resuelto contra Odoo (ver getCatalog). */
+  products: Product[];
   initialFilter?: CatalogFilter;
 }) {
   const [filter, setFilter] = useState<CatalogFilter>(initialFilter);
@@ -35,7 +38,7 @@ export function ProductsCatalog({
       const byName = !needle || product.name.toLowerCase().includes(needle);
       return bySchool && byName;
     });
-  }, [filter, query]);
+  }, [products, filter, query]);
 
   return (
     <section className="min-h-[70svh] bg-surface-blue py-10 lg:py-14">

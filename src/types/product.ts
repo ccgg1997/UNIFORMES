@@ -16,4 +16,9 @@ export type Product = {
   price: number;
   image: string;
   sizes: string[];
+  /**
+   * Nombre EXACTO del producto en Odoo (sin la talla). null = sin mapear
+   * todavia: el sitio sigue mostrando el precio fijo de este archivo.
+   */
+  odooName: string | null;
 };

@@ -20,7 +20,14 @@ export const schools: School[] = [
 
 const SIZES = ["6", "8", "10", "12", "14", "16"];
 
-/** Order matters: this is the order the prendas carousel scrolls through. */
+/**
+ * Order matters: this is the order the prendas carousel scrolls through.
+ *
+ * odooName conecta cada prenda con el inventario real. Nombres disponibles hoy
+ * en Odoo: "BLUSA DIARIO NIÑA (DEBAJO)", "CAMIBUSO COMFANDI",
+ * "CAMISA UNISEX ED. FISICA", "GUAYABERA NIÑO GRUESA".
+ * Mientras siga en null, el precio publicado es el de este archivo.
+ */
 export const products: Product[] = [
   {
     id: "arqui-camiseta-educacion-fisica",
@@ -29,6 +36,7 @@ export const products: Product[] = [
     price: 45000,
     image: "/images/productos/arqui-camiseta-educacion-fisica.webp",
     sizes: SIZES,
+    odooName: null,
   },
   {
     id: "arqui-sudadera-educacion-fisica",
@@ -37,6 +45,7 @@ export const products: Product[] = [
     price: 80000,
     image: "/images/productos/arqui-sudadera-educacion-fisica.webp",
     sizes: SIZES,
+    odooName: null,
   },
   {
     id: "arqui-jardinera-diaria",
@@ -45,6 +54,7 @@ export const products: Product[] = [
     price: 90000,
     image: "/images/productos/arqui-jardinera-diaria.webp",
     sizes: SIZES,
+    odooName: null,
   },
   {
     id: "comfandi-camiseta-blanca",
@@ -53,6 +63,7 @@ export const products: Product[] = [
     price: 38000,
     image: "/images/productos/comfandi-camiseta-blanca.webp",
     sizes: SIZES,
+    odooName: null,
   },
   {
     id: "comfandi-pantalon-azul",
@@ -61,6 +72,7 @@ export const products: Product[] = [
     price: 70000,
     image: "/images/productos/comfandi-pantalon-azul.webp",
     sizes: SIZES,
+    odooName: null,
   },
   {
     id: "arqui-camisa-blanca",
@@ -69,6 +81,7 @@ export const products: Product[] = [
     price: 55000,
     image: "/images/productos/arqui-camisa-blanca.webp",
     sizes: SIZES,
+    odooName: null,
   },
   {
     id: "arqui-pantalon-diario",
@@ -77,6 +90,7 @@ export const products: Product[] = [
     price: 65000,
     image: "/images/productos/arqui-pantalon-diario.webp",
     sizes: SIZES,
+    odooName: null,
   },
 ];
 

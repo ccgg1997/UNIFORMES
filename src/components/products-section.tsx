@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ProductCard } from "@/components/product-card";
 import { ProductDrawer } from "@/components/product-drawer";
 import { SectionHeading } from "@/components/section-heading";
-import { products, schools } from "@/data/products";
+import { schools } from "@/data/products";
 import { PRODUCTS_PATH } from "@/lib/routes";
 import type { Product, SchoolId } from "@/types/product";
 
@@ -17,7 +17,7 @@ const FILTERS: { id: Filter; label: string }[] = [
   ...schools.map((school) => ({ id: school.id as Filter, label: school.name })),
 ];
 
-export function ProductsSection() {
+export function ProductsSection({ products }: { products: Product[] }) {
   const [filter, setFilter] = useState<Filter>("todos");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Product | null>(null);
@@ -32,7 +32,7 @@ export function ProductsSection() {
       const byName = !needle || product.name.toLowerCase().includes(needle);
       return bySchool && byName;
     });
-  }, [filter, query]);
+  }, [products, filter, query]);
 
   // Arrows only make sense while there is something left to reveal.
   const syncArrows = useCallback(() => {

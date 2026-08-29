@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { ProductsCatalog, type CatalogFilter } from "@/components/products-catalog";
 import { schools } from "@/data/products";
+import { getCatalog } from "@/lib/catalog";
 import { SCHOOL_PARAM } from "@/lib/routes";
 
 export const metadata: Metadata = {
@@ -24,8 +25,9 @@ export default async function ProductosPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const filter = parseSchool((await searchParams)[SCHOOL_PARAM]);
+  const products = await getCatalog();
 
   // key: arriving with a different school must reset the grid, not keep the
   // filter the previous visit left in state.
-  return <ProductsCatalog key={filter} initialFilter={filter} />;
+  return <ProductsCatalog key={filter} products={products} initialFilter={filter} />;
 }
