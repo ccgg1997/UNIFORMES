@@ -101,7 +101,7 @@ body {
   background: var(--surface-blue);
 }
 
-/* Carrusel de prendas: se desplaza con las flechas, sin barra visible. */
+/* Filtros de colegio en móvil: se desplazan de lado, sin barra visible. */
 @utility no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;

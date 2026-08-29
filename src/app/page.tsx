@@ -1,15 +1,6 @@
 import { Hero } from "@/components/hero";
-import { ProductsSection } from "@/components/products-section";
 
-/**
- * The whole catalogue is one route: Inicio (hero + school shortcuts) and
- * Prendas (filters + grid + drawer). Nothing else.
- */
+/** Inicio: hero + school shortcuts. The prendas grid lives in /productos. */
 export default function Home() {
-  return (
-    <>
-      <Hero />
-      <ProductsSection />
-    </>
-  );
+  return <Hero />;
 }

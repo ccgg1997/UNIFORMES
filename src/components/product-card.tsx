@@ -25,7 +25,7 @@ export function ProductCard({
           src={product.image}
           alt={product.name}
           fill
-          sizes="(max-width: 640px) 45vw, (max-width: 1280px) 30vw, 200px"
+          sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, (max-width: 1280px) 24vw, 220px"
           className="object-contain transition-transform duration-200 group-hover:scale-[1.02]"
         />
       </span>

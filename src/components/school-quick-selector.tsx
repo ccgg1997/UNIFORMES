@@ -1,13 +1,12 @@
-"use client";
-
 import Image from "next/image";
+import Link from "next/link";
 
 import { SectionHeading } from "@/components/section-heading";
 import { schools } from "@/data/products";
-import { selectSchoolAndScroll } from "@/lib/scroll";
+import { productsHref } from "@/lib/routes";
 
 /**
- * Still part of Inicio: two shortcuts that jump to Prendas with the school
+ * Still part of Inicio: two shortcuts that open /productos with the school
  * filter already applied.
  */
 export function SchoolQuickSelector() {
@@ -17,10 +16,9 @@ export function SchoolQuickSelector() {
 
       <div className="mt-8 grid gap-5 sm:grid-cols-2">
         {schools.map((school) => (
-          <button
+          <Link
             key={school.id}
-            type="button"
-            onClick={() => selectSchoolAndScroll(school.id)}
+            href={productsHref(school.id)}
             className="group grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-center gap-4 overflow-hidden rounded-2xl bg-surface py-5 text-left transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <span className="relative block h-44 w-full sm:h-48">
@@ -56,7 +54,7 @@ export function SchoolQuickSelector() {
                 </svg>
               </span>
             </span>
-          </button>
+          </Link>
         ))}
       </div>
     </div>

@@ -1,11 +1,10 @@
-"use client";
-
 import Image from "next/image";
+import Link from "next/link";
 
 import { SchoolDoodles } from "@/components/school-doodles";
 import { SchoolQuickSelector } from "@/components/school-quick-selector";
 import { WhatsAppButton } from "@/components/whatsapp-button";
-import { scrollToSection } from "@/lib/scroll";
+import { PRODUCTS_PATH } from "@/lib/routes";
 
 const BENEFITS = [
   {
@@ -52,17 +51,13 @@ export function Hero() {
 
           <span className="mt-7 block h-[3px] w-16 rounded-full bg-gold" />
 
-          <p className="mt-6 max-w-[22rem] text-[15px] leading-[1.75] text-muted sm:text-base">
+          <p className="mt-6 hidden max-w-[22rem] text-[15px] leading-[1.75] text-muted sm:text-base lg:block">
             Calidad, comodidad y presentación para acompañarlos todos los días.
             Encuentra el uniforme de tu colegio en pocos pasos.
           </p>
 
           <div className="mt-8 hidden flex-wrap gap-3 lg:flex">
-            <button
-              type="button"
-              onClick={() => scrollToSection("prendas")}
-              className="btn btn-primary group h-12 px-6"
-            >
+            <Link href={PRODUCTS_PATH} className="btn btn-primary group h-12 px-6">
               Ver prendas
               <svg
                 viewBox="0 0 24 24"
@@ -76,7 +71,7 @@ export function Hero() {
               >
                 <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
-            </button>
+            </Link>
             <WhatsAppButton className="btn btn-secondary h-12 px-6">
               Consultar por WhatsApp
             </WhatsAppButton>

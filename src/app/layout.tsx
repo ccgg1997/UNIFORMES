@@ -22,7 +22,10 @@ const deploymentHost =
 
 export const metadata: Metadata = {
   metadataBase: new URL(deploymentHost),
-  title: "Manantial de Moda | Uniformes escolares",
+  title: {
+    default: "Manantial de Moda | Uniformes escolares",
+    template: "%s | Manantial de Moda",
+  },
   description:
     "Catálogo de uniformes escolares para Colegios Arquidiocesanos y Comfandi. Consulta tallas y disponibilidad por WhatsApp.",
   keywords: [
