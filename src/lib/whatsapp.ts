@@ -1,5 +1,5 @@
 import { formatPrice, schoolName, WHATSAPP_PHONE } from "@/data/products";
-import type { Product } from "@/types/product";
+import type { Product, ProductVariant } from "@/types/product";
 
 function link(message: string) {
   return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
@@ -14,7 +14,7 @@ export function generalWhatsAppUrl() {
 
 export function productWhatsAppUrl(
   product: Product,
-  selectedSize: string,
+  selectedVariant: ProductVariant,
   quantity: number,
 ) {
   return link(
@@ -25,11 +25,11 @@ Estoy interesado(a) en:
 ${product.name}
 
 Colegio: ${schoolName(product.school)}
-Talla: ${selectedSize}
+Talla: ${selectedVariant.size}
 Cantidad: ${quantity}
-Precio: ${formatPrice(product.price)}
+Precio unitario: ${formatPrice(selectedVariant.price)}
 
-¿Me pueden confirmar disponibilidad?`,
+¿Me pueden confirmar el precio y ayudarme con esta solicitud?`,
   );
 }
 

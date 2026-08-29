@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-29T16:25:49.043Z",
+  "updatedAt": "2026-08-29T17:34:40.114Z",
   "products": [
     {
       "odooName": "BLUSA DIARIO NIÑA (DEBAJO)",
@@ -192,7 +192,7 @@
           "odooId": 44,
           "size": "16",
           "price": 36000,
-          "stock": 0
+          "stock": -1
         }
       ]
     },
@@ -604,7 +604,7 @@
           "odooId": 84,
           "size": "10",
           "price": 43000,
-          "stock": 13
+          "stock": 12
         },
         {
           "odooId": 79,

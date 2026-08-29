@@ -1,6 +1,8 @@
-import { unstable_cache } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 import snapshot from "@/data/inventory.json";
+import { productDefinitions } from "@/data/products";
+import type { ProductVariant } from "@/types/product";
 
 /** Tag que invalida el cron de medianoche. */
 export const INVENTORY_TAG = "inventario";
@@ -24,12 +26,18 @@ const excluido = (nombre: string) =>
   EXCLUIDOS_EXACTOS.has(nombre) ||
   EXCLUIDOS_POR_PALABRA.has(nombre.split(" ")[0].toUpperCase());
 
-/**
- * n8n ya cortó una vez la consulta en 50 registros justos, y como Odoo entrega
- * en orden alfabético se perdía todo lo posterior a la G. Un total que caiga
- * EXACTO en un tope redondo es la firma de ese bug; 95 (el dato real) no lo es.
- */
-const TOPES_SOSPECHOSOS = new Set([10, 20, 25, 50, 100, 200, 250, 500, 1000]);
+class IncompleteInventoryError extends Error {
+  constructor(
+    readonly received: number,
+    readonly excluded: string[],
+    readonly missing: string[],
+  ) {
+    super(
+      `El MCP devolvió un inventario incompleto (${received}); faltan: ${missing.join(", ")}`,
+    );
+    this.name = "IncompleteInventoryError";
+  }
+}
 
 /**
  * Odoo mezcla tallas de letra y de número (y JARDINERA NIÑA trae 2XL, que
@@ -37,12 +45,7 @@ const TOPES_SOSPECHOSOS = new Set([10, 20, 25, 50, 100, 200, 250, 500, 1000]);
  */
 const ORDEN_LETRAS = ["XS", "S", "M", "L", "XL", "2XL", "XXL", "3XL"];
 
-export type SizeRow = {
-  odooId: number;
-  size: string;
-  price: number;
-  stock: number;
-};
+export type SizeRow = ProductVariant;
 
 export type OdooProduct = {
   odooName: string;
@@ -56,10 +59,12 @@ export type Inventory = {
   stale: boolean;
   /** Variantes crudas recibidas, antes de excluir. */
   received: number;
-  /** true si Odoo devolvió justo el tope: hay catálogo que no estamos viendo. */
+  /** true cuando faltan productos presentes en el último respaldo completo. */
   truncated: boolean;
   /** Nombres que el filtro dejó por fuera, para que no sea un descarte mudo. */
   excluded: string[];
+  /** Productos del último respaldo completo que no llegaron en la consulta. */
+  missing: string[];
 };
 
 type OdooVariant = {
@@ -68,6 +73,31 @@ type OdooVariant = {
   qty_available: number;
   display_name: string;
 };
+
+function parseVariants(value: unknown): OdooVariant[] {
+  if (!Array.isArray(value)) {
+    throw new Error("El MCP no devolvió una lista de variantes");
+  }
+
+  const valid = value.every(
+    (variant) =>
+      typeof variant === "object" &&
+      variant !== null &&
+      Number.isInteger(variant.id) &&
+      variant.id > 0 &&
+      Number.isInteger(variant.lst_price) &&
+      variant.lst_price >= 0 &&
+      Number.isInteger(variant.qty_available) &&
+      typeof variant.display_name === "string" &&
+      variant.display_name.trim() !== "",
+  );
+
+  if (!valid) {
+    throw new Error("El MCP devolvió variantes con un formato inválido");
+  }
+
+  return value as OdooVariant[];
+}
 
 /** El servidor contesta SSE aunque pidamos JSON: hay que extraer el `data:`. */
 function parseSse(text: string) {
@@ -88,6 +118,7 @@ async function rpc(url: string, body: object, sessionId?: string | null) {
     },
     body: JSON.stringify({ jsonrpc: "2.0", ...body }),
     cache: "no-store",
+    signal: AbortSignal.timeout(20_000),
   });
   if (!res.ok) throw new Error(`MCP HTTP ${res.status}`);
   return { res, text: await res.text() };
@@ -111,14 +142,17 @@ export function sortSizes(sizes: SizeRow[]) {
   });
 }
 
+function productName(displayName: string) {
+  const match = /^(.*?)\s*\(([^()]*)\)\s*$/.exec(displayName);
+  return (match ? match[1] : displayName).replace(/\s+/g, " ").trim();
+}
+
 /** Odoo nombra cada variante `PRODUCTO  (TALLA)`. */
 export function groupVariants(variants: OdooVariant[]): OdooProduct[] {
   const byProduct = new Map<string, SizeRow[]>();
   for (const variant of variants) {
     const match = /^(.*?)\s*\(([^()]*)\)\s*$/.exec(variant.display_name);
-    const odooName = (match ? match[1] : variant.display_name)
-      .replace(/\s+/g, " ")
-      .trim();
+    const odooName = productName(variant.display_name);
     if (excluido(odooName)) continue;
     if (!byProduct.has(odooName)) byProduct.set(odooName, []);
     byProduct.get(odooName)!.push({
@@ -137,13 +171,19 @@ export function groupVariants(variants: OdooVariant[]): OdooProduct[] {
 export function excludedNames(variants: OdooVariant[]) {
   const fuera = new Set<string>();
   for (const variant of variants) {
-    const match = /^(.*?)\s*\(([^()]*)\)\s*$/.exec(variant.display_name);
-    const odooName = (match ? match[1] : variant.display_name)
-      .replace(/\s+/g, " ")
-      .trim();
+    const odooName = productName(variant.display_name);
     if (excluido(odooName)) fuera.add(odooName);
   }
   return [...fuera].sort((a, b) => a.localeCompare(b, "es"));
+}
+
+function missingExpectedNames(variants: OdooVariant[]) {
+  const received = new Set(
+    variants.map((variant) => productName(variant.display_name)),
+  );
+  return productDefinitions
+    .map((product) => product.odooName)
+    .filter((name) => !received.has(name));
 }
 
 async function fetchInventory(): Promise<Inventory> {
@@ -170,22 +210,60 @@ async function fetchInventory(): Promise<Inventory> {
     sessionId,
   );
   const result = parseSse(call.text);
-  const variants: OdooVariant[] = JSON.parse(result.content[0].text);
+  const content = result?.content?.find(
+    (item: { type?: string; text?: string }) =>
+      item.type === "text" && typeof item.text === "string",
+  );
+  if (!content?.text) {
+    throw new Error("El MCP no devolvió contenido de inventario");
+  }
+
+  const variants = parseVariants(JSON.parse(content.text));
+  const excluded = excludedNames(variants);
+  const missing = missingExpectedNames(variants);
+  if (!variants.length || missing.length) {
+    throw new IncompleteInventoryError(variants.length, excluded, missing);
+  }
 
   return {
     updatedAt: new Date().toISOString(),
     products: groupVariants(variants),
     stale: false,
     received: variants.length,
-    truncated: TOPES_SOSPECHOSOS.has(variants.length),
-    excluded: excludedNames(variants),
+    truncated: false,
+    excluded,
+    missing: [],
   };
 }
 
-const cached = unstable_cache(fetchInventory, ["odoo-inventario"], {
+let preparedInventory: Inventory | null = null;
+
+async function loadInventoryForCache() {
+  const prepared = preparedInventory;
+  preparedInventory = null;
+  return prepared ?? fetchInventory();
+}
+
+const cached = unstable_cache(loadInventoryForCache, ["odoo-inventario"], {
   tags: [INVENTORY_TAG],
   revalidate: UN_DIA,
 });
+
+/**
+ * El cron valida primero una respuesta fresca sin tocar el último caché bueno.
+ * Solo después la promueve a la entrada cacheada que consumen las páginas.
+ */
+export async function refreshInventory(): Promise<Inventory> {
+  const fresh = await fetchInventory();
+  preparedInventory = fresh;
+  revalidateTag(INVENTORY_TAG, { expire: 0 });
+
+  try {
+    return await cached();
+  } finally {
+    preparedInventory = null;
+  }
+}
 
 /**
  * El catch va por fuera del caché a propósito: así un fallo del MCP no queda
@@ -205,13 +283,17 @@ export async function getInventory(): Promise<Inventory> {
         display_name: `${product.odooName} (${size.size})`,
       })),
     );
+    const incomplete =
+      error instanceof IncompleteInventoryError ? error : null;
+
     return {
       updatedAt: snapshot.updatedAt,
       products: groupVariants(variants),
       stale: true,
-      received: variants.length,
-      truncated: false,
-      excluded: excludedNames(variants),
+      received: incomplete?.received ?? variants.length,
+      truncated: Boolean(incomplete),
+      excluded: incomplete?.excluded ?? excludedNames(variants),
+      missing: incomplete?.missing ?? [],
     };
   }
 }

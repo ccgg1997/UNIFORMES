@@ -1,11 +1,10 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 
-import { INVENTORY_TAG } from "@/lib/inventory";
+import { refreshInventory } from "@/lib/inventory";
 
 /**
- * Lo llama el cron de Vercel cada medianoche (hora Colombia). Solo marca el
- * caché como vencido: la consulta real a Odoo la hace la primera visita
- * posterior, sirviendo el dato anterior mientras llega el nuevo.
+ * Lo llama el cron de Vercel cada medianoche (hora Colombia). Valida primero
+ * el MCP y solo entonces reemplaza el caché que consumen las páginas.
  */
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET;
@@ -16,7 +15,28 @@ export async function GET(request: Request) {
     return Response.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  revalidateTag(INVENTORY_TAG, "max");
+  try {
+    const inventory = await refreshInventory();
 
-  return Response.json({ ok: true, tag: INVENTORY_TAG, at: new Date().toISOString() });
+    revalidatePath("/");
+    revalidatePath("/productos");
+    revalidatePath("/inventario");
+
+    return Response.json({
+      ok: true,
+      source: "mcp",
+      updatedAt: inventory.updatedAt,
+      products: inventory.products.length,
+      variants: inventory.received,
+    });
+  } catch (error) {
+    console.error("[inventario] Falló la actualización nocturna:", error);
+    return Response.json(
+      {
+        ok: false,
+        error: "No se pudo validar y actualizar el inventario desde el MCP",
+      },
+      { status: 503 },
+    );
+  }
 }

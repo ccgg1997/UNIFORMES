@@ -6,12 +6,13 @@
  * Uso: node scripts/sync-inventory.mjs
  * Requiere ODOO_MCP_URL en el entorno (ver .env.local).
  */
-import { writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = resolve(ROOT, "src/data/inventory.json");
+const DEFINITIONS = resolve(ROOT, "src/data/products.ts");
 const TOOL = "verificar_inventario";
 const LETRAS = ["XS", "S", "M", "L", "XL", "2XL", "XXL", "3XL"];
 
@@ -39,6 +40,7 @@ async function rpc(body, sessionId) {
       ...(sessionId ? { "mcp-session-id": sessionId } : {}),
     },
     body: JSON.stringify({ jsonrpc: "2.0", ...body }),
+    signal: AbortSignal.timeout(20_000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
   return { res, text: await res.text() };
@@ -64,7 +66,49 @@ async function fetchVariants() {
     sessionId,
   );
   const result = parseSse(call.text);
-  return JSON.parse(result.content[0].text);
+  const variants = JSON.parse(result.content[0].text);
+  if (!Array.isArray(variants)) {
+    throw new Error("El MCP no devolvió una lista de variantes");
+  }
+  const valid = variants.every(
+    (variant) =>
+      Number.isInteger(variant?.id) &&
+      variant.id > 0 &&
+      Number.isInteger(variant?.lst_price) &&
+      variant.lst_price >= 0 &&
+      Number.isInteger(variant?.qty_available) &&
+      typeof variant?.display_name === "string" &&
+      variant.display_name.trim() !== "",
+  );
+  if (!valid) {
+    throw new Error("El MCP devolvió variantes con un formato inválido");
+  }
+  await validateCoverage(variants);
+  return variants;
+}
+
+function productName(displayName) {
+  const match = /^(.*?)\s*\(([^()]*)\)\s*$/.exec(displayName);
+  return (match ? match[1] : displayName).replace(/\s+/g, " ").trim();
+}
+
+async function validateCoverage(variants) {
+  const definitions = await readFile(DEFINITIONS, "utf8");
+  const requiredNames = [
+    ...definitions.matchAll(/^\s*odooName:\s*"([^"]+)",/gm),
+  ].map((match) => match[1]);
+  if (!requiredNames.length) {
+    throw new Error("No se encontraron productos publicados en products.ts");
+  }
+
+  const received = new Set(variants.map((variant) => productName(variant.display_name)));
+  const missing = requiredNames.filter((name) => !received.has(name));
+
+  if (!variants.length || missing.length) {
+    throw new Error(
+      `El MCP devolvió un inventario incompleto; no se sobrescribe el respaldo. Faltan: ${missing.join(", ") || "todos los productos"}`,
+    );
+  }
 }
 
 /** Odoo nombra cada variante `PRODUCTO  (TALLA)`; agrupamos por el nombre base. */
@@ -72,7 +116,7 @@ function group(variants) {
   const byProduct = new Map();
   for (const v of variants) {
     const match = /^(.*?)\s*\(([^()]*)\)\s*$/.exec(v.display_name);
-    const name = (match ? match[1] : v.display_name).replace(/\s+/g, " ").trim();
+    const name = productName(v.display_name);
     const size = match ? match[2].trim() : "";
     if (!byProduct.has(name)) byProduct.set(name, []);
     byProduct.get(name).push({

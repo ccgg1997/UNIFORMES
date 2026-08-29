@@ -10,6 +10,14 @@ export function ProductCard({
   product: Product;
   onSelect: (product: Product) => void;
 }) {
+  const availableVariants = product.variants.filter((variant) => variant.stock > 0);
+  const pricedVariants = availableVariants.length
+    ? availableVariants
+    : product.variants;
+  const prices = pricedVariants.map((variant) => variant.price);
+  const minimumPrice = Math.min(...prices);
+  const hasPriceRange = prices.some((price) => price !== minimumPrice);
+
   return (
     <button
       type="button"
@@ -34,11 +42,12 @@ export function ProductCard({
         {product.name}
       </span>
       <span className="mt-1.5 block text-[15px] font-extrabold text-ink">
-        {formatPrice(product.price)}
+        {hasPriceRange ? "Desde " : ""}
+        {formatPrice(minimumPrice)}
       </span>
 
       <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-primary">
-        Consultar talla y disponibilidad
+        Ver tallas y precios
         <svg
           viewBox="0 0 24 24"
           fill="none"

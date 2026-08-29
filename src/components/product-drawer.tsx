@@ -16,7 +16,7 @@ export function ProductDrawer({
   product: Product | null;
   onClose: () => void;
 }) {
-  const [size, setSize] = useState<string | null>(null);
+  const [variantId, setVariantId] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState(false);
   const [zoom, setZoom] = useState(false);
@@ -44,12 +44,31 @@ export function ProductDrawer({
 
   if (!product) return null;
 
+  const selectedVariant =
+    product.variants.find((variant) => variant.odooId === variantId) ?? null;
+  const availableVariants = product.variants.filter((variant) => variant.stock > 0);
+  const pricedVariants = availableVariants.length
+    ? availableVariants
+    : product.variants;
+  const prices = pricedVariants.map((variant) => variant.price);
+  const minimumPrice = Math.min(...prices);
+  const maximumPrice = Math.max(...prices);
+  const hasPriceRange = minimumPrice !== maximumPrice;
+  const displayedPrice = selectedVariant?.price ?? minimumPrice;
+  const availableStock = selectedVariant
+    ? Math.max(0, Math.floor(selectedVariant.stock))
+    : 0;
+  const soldOut = selectedVariant ? availableStock <= 0 : false;
+  const maximumQuantity = selectedVariant
+    ? Math.max(1, Math.min(99, availableStock))
+    : 1;
+
   const consult = () => {
-    if (!size) {
+    if (!selectedVariant) {
       setError(true);
       return;
     }
-    openWhatsApp(productWhatsAppUrl(product, size, quantity));
+    openWhatsApp(productWhatsAppUrl(product, selectedVariant, quantity));
   };
 
   return (
@@ -122,32 +141,74 @@ export function ProductDrawer({
             </span>
           </button>
 
-          <p className="mt-5 text-2xl font-extrabold text-ink">
-            {formatPrice(product.price)}
+          <p
+            aria-live="polite"
+            className="mt-5 text-2xl font-extrabold text-ink"
+          >
+            {!selectedVariant && hasPriceRange ? "Desde " : ""}
+            {formatPrice(displayedPrice)}
           </p>
+          <p aria-live="polite" className="mt-1 text-[12px] text-muted">
+            {selectedVariant
+              ? soldOut
+                ? "Sin existencias en la última actualización."
+                : `${availableStock} ${
+                    availableStock === 1
+                      ? "unidad disponible"
+                      : "unidades disponibles"
+                  }`
+              : hasPriceRange
+                ? "El precio cambia según la talla."
+                : "Selecciona una talla para consultar existencias."}
+          </p>
+          {product.inventoryStale ? (
+            <p
+              role="status"
+              className="mt-3 rounded-xl border border-gold/40 bg-gold/10 px-3 py-2 text-[11px] font-semibold text-ink"
+            >
+              Mostrando el último respaldo validado porque el MCP no respondió.
+            </p>
+          ) : null}
 
-          <fieldset className="mt-6">
+          <fieldset className="mt-5">
             <legend className="text-[13px] font-bold text-ink">Talla</legend>
             <div className="mt-3 flex flex-wrap gap-2">
-              {product.sizes.map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => {
-                    setSize(option);
-                    setError(false);
-                  }}
-                  aria-pressed={size === option}
-                  className={`h-10 min-w-11 rounded-full border px-3 text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
-                    size === option
-                      ? "border-primary bg-primary text-white"
-                      : "border-border bg-background text-ink hover:border-primary/40"
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
+              {product.variants.map((option) => {
+                const active = selectedVariant?.odooId === option.odooId;
+                const unavailable = option.stock <= 0;
+
+                return (
+                  <button
+                    key={option.odooId}
+                    type="button"
+                    onClick={() => {
+                      setVariantId(option.odooId);
+                      setQuantity(1);
+                      setError(false);
+                    }}
+                    aria-label={`Talla ${option.size}${
+                      unavailable ? ", sin existencias" : ""
+                    }`}
+                    aria-pressed={active}
+                    className={`h-10 min-w-11 rounded-full border px-3 text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+                      active
+                        ? "border-primary bg-primary text-white"
+                        : unavailable
+                          ? "border-border bg-surface text-muted line-through hover:border-primary/40"
+                          : "border-border bg-background text-ink hover:border-primary/40"
+                    }`}
+                  >
+                    {option.size}
+                  </button>
+                );
+              })}
             </div>
+            {product.variants.some((variant) => variant.stock <= 0) ? (
+              <p className="mt-2 text-[11px] text-muted">
+                Las tallas tachadas no tienen existencias en la última
+                actualización.
+              </p>
+            ) : null}
             {error ? (
               <p role="alert" className="mt-3 text-[13px] font-semibold text-[#c82b31]">
                 Selecciona una talla para consultar disponibilidad.
@@ -162,7 +223,8 @@ export function ProductDrawer({
                 type="button"
                 aria-label="Quitar una unidad"
                 onClick={() => setQuantity((value) => Math.max(1, value - 1))}
-                className="flex size-9 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                disabled={!selectedVariant || soldOut || quantity <= 1}
+                className="flex size-9 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-40"
               >
                 <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden="true" className="size-4">
                   <path d="M5 12h14" />
@@ -174,8 +236,13 @@ export function ProductDrawer({
               <button
                 type="button"
                 aria-label="Agregar una unidad"
-                onClick={() => setQuantity((value) => Math.min(99, value + 1))}
-                className="flex size-9 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                onClick={() =>
+                  setQuantity((value) => Math.min(maximumQuantity, value + 1))
+                }
+                disabled={
+                  !selectedVariant || soldOut || quantity >= maximumQuantity
+                }
+                className="flex size-9 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-40"
               >
                 <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden="true" className="size-4">
                   <path d="M12 5v14M5 12h14" />
@@ -192,7 +259,7 @@ export function ProductDrawer({
             className="btn btn-primary h-12 w-full px-5"
           >
             <WhatsAppIcon className="size-[18px]" />
-            Consultar disponibilidad
+            Consultar por WhatsApp
           </button>
           <p className="mt-3 text-center text-[11px] text-muted">
             Te atenderemos directamente por WhatsApp.

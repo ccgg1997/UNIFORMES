@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function InventarioPage() {
-  const { products, updatedAt, stale, received, truncated, excluded } =
+  const { products, updatedAt, stale, received, truncated, excluded, missing } =
     await getInventory();
 
   const totalUnidades = products.reduce(
@@ -40,11 +40,10 @@ export default async function InventarioPage() {
             role="alert"
             className="mt-4 rounded-xl border border-[#c82b31]/40 bg-[#c82b31]/10 px-4 py-3 text-[13px] font-semibold text-ink"
           >
-            Odoo devolvió exactamente {received} registros: el workflow de n8n
-            está cortando la consulta. Odoo entrega los productos en orden
-            alfabético, así que todo lo posterior a la G (jardinera, logo,
-            medias, pantalón, sudadera…) no está llegando. Activa{" "}
-            <b>Return All</b> en el nodo Odoo de n8n para verlo completo.
+            El MCP devolvió una respuesta incompleta de {received} variantes.
+            {missing.length ? ` Faltan: ${missing.join(", ")}.` : ""} Se
+            mantiene el último respaldo completo; revisa que el nodo Odoo de
+            n8n tenga activa la opción <b>Return All</b>.
           </p>
         ) : null}
 

@@ -1,27 +1,35 @@
-import { products } from "@/data/products";
+import { productDefinitions } from "@/data/products";
 import { getInventory } from "@/lib/inventory";
 import type { Product } from "@/types/product";
 
 /**
- * El catálogo del sitio manda sobre nombres, fotos y colegio; Odoo solo aporta
- * el precio. Una prenda sin odooName conserva el precio fijo de products.ts.
+ * Los metadatos visuales viven en el sitio; todas las variantes publicadas
+ * (talla, precio y existencias) deben existir en la fuente de inventario.
  */
 export async function getCatalog(): Promise<Product[]> {
-  const { products: odoo } = await getInventory();
+  const {
+    products: odoo,
+    updatedAt: inventoryUpdatedAt,
+    stale: inventoryStale,
+  } = await getInventory();
   const byName = new Map(odoo.map((item) => [item.odooName, item]));
 
-  return products.map((product) => {
-    const match = product.odooName ? byName.get(product.odooName) : undefined;
-    if (!match) return product;
+  return productDefinitions.flatMap((definition) => {
+    const match = byName.get(definition.odooName);
+    if (!match?.sizes.length) return [];
 
-    // El sitio publica tallas 6-16, y Odoo cobra distinto esa banda que S-XL:
-    // el precio mostrado es el de las tallas que realmente aparecen.
-    const propias = match.sizes.filter((size) =>
-      product.sizes.includes(size.size),
-    );
-    const precios = (propias.length ? propias : match.sizes).map((s) => s.price);
-    if (!precios.length) return product;
-
-    return { ...product, price: Math.min(...precios) };
+    return [
+      {
+        ...definition,
+        inventoryUpdatedAt,
+        inventoryStale,
+        variants: match.sizes.map(({ odooId, size, price, stock }) => ({
+          odooId,
+          size,
+          price,
+          stock,
+        })),
+      },
+    ];
   });
 }
