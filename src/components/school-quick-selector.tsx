@@ -21,9 +21,9 @@ export function SchoolQuickSelector() {
             key={school.id}
             type="button"
             onClick={() => selectSchoolAndScroll(school.id)}
-            className="group grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-end gap-4 overflow-hidden rounded-2xl bg-surface pt-5 text-left transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="group grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-center gap-4 overflow-hidden rounded-2xl bg-surface py-5 text-left transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
-            <span className="relative block h-44 w-full sm:h-52">
+            <span className="relative block h-44 w-full sm:h-48">
               <Image
                 src={school.image}
                 alt={`Uniformes de ${school.name}`}

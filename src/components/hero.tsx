@@ -142,7 +142,7 @@ function HeroArtwork() {
         />
       </svg>
 
-      <div className="relative aspect-[1047/1250] w-full">
+      <div className="relative aspect-[1042/1250] w-full">
         <Image
           src="/images/hero/estudiantes.webp"
           alt="Estudiantes con uniformes de Colegios Arquidiocesanos y Comfandi"
