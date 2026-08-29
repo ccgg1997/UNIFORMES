@@ -1,13 +1,12 @@
 # Manantial de Moda — Catálogo de uniformes
 
-Catálogo web de uniformes escolares para Colegios Arquidiocesanos y Comfandi. La experiencia está pensada para llevar al usuario desde la selección del colegio hasta una consulta personalizada por WhatsApp, sin carrito ni checkout.
+One page de uniformes escolares para Colegios Arquidiocesanos y Comfandi. Toda la experiencia vive en `/`: Inicio (hero + acceso rápido por colegio) y Prendas (filtros, grid y drawer de producto). No hay carrito ni checkout: cada consulta abre WhatsApp con el mensaje precargado.
 
 ## Stack
 
-- Next.js 16 (App Router)
+- Next.js 16 (App Router, una sola ruta)
 - React 19 + TypeScript
-- Tailwind CSS 4
-- Componentes accesibles inspirados en shadcn/ui
+- Tailwind CSS 4 (solo light mode)
 
 ## Desarrollo local
 
@@ -26,11 +25,17 @@ pnpm lint
 pnpm build
 ```
 
-## Contenido comercial
+## Estructura
 
-Los precios y la disponibilidad se muestran como pendientes de confirmación porque no fueron incluidos en el material inicial. Se confirman directamente por WhatsApp al seleccionar producto, talla y cantidad.
+```
+src/
+  app/page.tsx           # única página: Inicio + Prendas
+  components/            # header, hero, products-section, product-drawer, footer…
+  data/products.ts       # catálogo (colegios, prendas, precios)
+  lib/whatsapp.ts        # mensajes y enlaces wa.me
+  lib/scroll.ts          # scroll suave y filtro por colegio
+```
 
 ## Privacidad de los activos
 
 La carpeta local `FOTOS/` está excluida del repositorio. Solo se publican en `public/images/` los recursos gráficos necesarios para el catálogo; documentos administrativos y demás material fuente no forman parte del sitio.
-

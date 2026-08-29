@@ -1,105 +1,110 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
+/* Manantial de Moda is a light-only catalogue: no dark variant, no
+   prefers-color-scheme, no theme toggle. The palette below is the whole system. */
 :root {
   --background: #ffffff;
-  --foreground: #072e63;
-  --card: #ffffff;
-  --card-foreground: #072e63;
-  --primary: #0848a8;
-  --primary-hover: #072e63;
-  --primary-foreground: #ffffff;
-  --muted: #f6f7f9;
-  --muted-foreground: #5e6673;
-  --border: #e2e6ec;
-  --ring: #0848a8;
-  --accent: #f2a900;
-  --accent-strong: #d79b24;
-  --accent-foreground: #072e63;
-  --navy: #072e63;
-  --cyan: #24b8cf;
-  --destructive: #c82b31;
-  --radius: 0.875rem;
-}
-
-.dark {
-  --background: #071426;
-  --foreground: #f7f9fc;
-  --card: #0b1d35;
-  --card-foreground: #f7f9fc;
-  --primary: #5b97f3;
-  --primary-hover: #78aaf6;
-  --primary-foreground: #061327;
-  --muted: #102641;
-  --muted-foreground: #afbdd0;
-  --border: #223a58;
-  --ring: #f2a900;
-  --accent: #f2b735;
-  --accent-strong: #d79b24;
-  --accent-foreground: #071426;
-  --navy: #031020;
-  --cyan: #42c8da;
-  --destructive: #ff848a;
+  --surface: #f8fafc;
+  --surface-blue: #f5f8fc;
+  --primary: #0848b8;
+  --primary-hover: #063b98;
+  --primary-deep: #062c68;
+  --gold: #e7a51b;
+  --ink: #071c3a;
+  --muted: #667085;
+  --border: #e5eaf1;
+  --card-border: #e6eaf0;
+  --card-media: #f7f8fa;
+  --cyan: #2ea7de;
+  --whatsapp: #25d366;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
+  --color-surface: var(--surface);
+  --color-surface-blue: var(--surface-blue);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
-  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-deep: var(--primary-deep);
+  --color-gold: var(--gold);
+  --color-ink: var(--ink);
   --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --color-ring: var(--ring);
-  --color-accent: var(--accent);
-  --color-accent-strong: var(--accent-strong);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-navy: var(--navy);
+  --color-card-border: var(--card-border);
+  --color-card-media: var(--card-media);
   --color-cyan: var(--cyan);
-  --color-destructive: var(--destructive);
+  --color-whatsapp: var(--whatsapp);
   --font-sans: var(--font-manrope);
-  --font-serif: var(--font-cormorant);
-  --radius-sm: calc(var(--radius) - 6px);
-  --radius-md: calc(var(--radius) - 3px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 6px);
-}
-
-* {
-  border-color: var(--border);
+  --radius-card: 16px;
 }
 
 html {
   scroll-behavior: smooth;
+  /* the sticky header must not cover the anchor it scrolls to */
+  scroll-padding-top: 5.5rem;
+  color-scheme: light;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--ink);
   font-family: var(--font-manrope), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 55%, transparent);
-  color: var(--foreground);
+  background: color-mix(in srgb, var(--gold) 45%, transparent);
+  color: var(--ink);
 }
 
-.school-grid-pattern {
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--primary) 5%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--primary) 5%, transparent) 1px, transparent 1px);
-  background-size: 32px 32px;
+/* Buttons -------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    transform 200ms ease;
 }
 
-.hero-glow {
-  background:
-    radial-gradient(circle at 90% 20%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 28%),
-    radial-gradient(circle at 10% 80%, color-mix(in srgb, var(--primary) 10%, transparent), transparent 30%);
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-secondary {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  color: var(--primary);
+}
+
+.btn-secondary:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  background: var(--surface-blue);
+}
+
+/* Decorative ----------------------------------------------------------- */
+.heading-mark {
+  color: var(--gold);
+  flex: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -110,10 +115,8 @@ body {
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
-

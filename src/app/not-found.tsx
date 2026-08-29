@@ -1,22 +1,21 @@
 import Link from "next/link";
 
-import { buttonVariants } from "@/components/ui/button";
-import { Container } from "@/components/ui/container";
-
 export default function NotFound() {
   return (
-    <Container className="flex min-h-[65svh] flex-col items-center justify-center py-16 text-center">
-      <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-primary">Error 404</p>
-      <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+    <div className="mx-auto flex min-h-[60svh] w-full max-w-[1180px] flex-col items-center justify-center px-4 py-16 text-center sm:px-6">
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
+        Error 404
+      </p>
+      <h1 className="mt-4 text-3xl font-extrabold tracking-[-0.03em] text-ink sm:text-4xl">
         Esta página no está en el catálogo
       </h1>
-      <p className="mt-4 max-w-lg text-base leading-7 text-muted-foreground">
-        Es posible que el uniforme o colegio que buscas haya cambiado de dirección.
+      <p className="mt-4 max-w-md text-[15px] leading-7 text-muted">
+        Todo el catálogo vive en una sola página. Vuelve al inicio para ver las
+        prendas disponibles.
       </p>
-      <Link href="/uniformes" className={`${buttonVariants()} mt-7`}>
-        Ver todos los uniformes
+      <Link href="/" className="btn btn-primary mt-7 h-12 px-6">
+        Volver al catálogo
       </Link>
-    </Container>
+    </div>
   );
 }
-
