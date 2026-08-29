@@ -36,7 +36,7 @@ export const products: Product[] = [
     price: 45000,
     image: "/images/productos/arqui-camiseta-educacion-fisica.webp",
     sizes: SIZES,
-    odooName: null,
+    odooName: "CAMISA UNISEX ED. FISICA",
   },
   {
     id: "arqui-sudadera-educacion-fisica",
@@ -45,7 +45,7 @@ export const products: Product[] = [
     price: 80000,
     image: "/images/productos/arqui-sudadera-educacion-fisica.webp",
     sizes: SIZES,
-    odooName: null,
+    odooName: "SUDADERA ED. FISICA ARQUIDIOCESANOS",
   },
   {
     id: "arqui-jardinera-diaria",
@@ -54,7 +54,7 @@ export const products: Product[] = [
     price: 90000,
     image: "/images/productos/arqui-jardinera-diaria.webp",
     sizes: SIZES,
-    odooName: null,
+    odooName: "JARDINERA NIÑA",
   },
   {
     id: "comfandi-camiseta-blanca",
@@ -63,7 +63,7 @@ export const products: Product[] = [
     price: 38000,
     image: "/images/productos/comfandi-camiseta-blanca.webp",
     sizes: SIZES,
-    odooName: null,
+    odooName: "CAMIBUSO COMFANDI",
   },
   {
     id: "comfandi-pantalon-azul",
@@ -72,7 +72,7 @@ export const products: Product[] = [
     price: 70000,
     image: "/images/productos/comfandi-pantalon-azul.webp",
     sizes: SIZES,
-    odooName: null,
+    odooName: "SUDADERA COMFANDI",
   },
   {
     id: "arqui-camisa-blanca",
@@ -81,7 +81,7 @@ export const products: Product[] = [
     price: 55000,
     image: "/images/productos/arqui-camisa-blanca.webp",
     sizes: SIZES,
-    odooName: null,
+    odooName: "GUAYABERA NIÑO GRUESA",
   },
   {
     id: "arqui-pantalon-diario",
@@ -90,7 +90,7 @@ export const products: Product[] = [
     price: 65000,
     image: "/images/productos/arqui-pantalon-diario.webp",
     sizes: SIZES,
-    odooName: null,
+    odooName: "PANTALON DIARIO NIÑO",
   },
 ];
 

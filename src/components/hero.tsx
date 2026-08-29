@@ -133,10 +133,10 @@ function HeroArtwork() {
       </svg>
 
       {/* sizes pide el doble de densidad: la caja mide 560px pero el archivo
-          nativo tiene 1134px, así el navegador no baja a la versión de 640w */}
-      <div className="relative aspect-[1134/1070] w-full">
+          nativo tiene 1167px, así el navegador no baja a la versión de 640w */}
+      <div className="relative aspect-[1167/1092] w-full">
         <Image
-          src="/images/hero/estudiantes.webp"
+          src="/images/hero/estudiantes-hero2.webp"
           alt="Estudiantes con uniformes de Colegios Arquidiocesanos y Comfandi"
           fill
           priority
