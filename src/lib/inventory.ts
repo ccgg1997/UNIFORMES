@@ -12,16 +12,17 @@ const UN_DIA = 86400;
  * Productos que existen en Odoo pero no se publican: la guayabera delgada
  * (la gruesa si va), los logos sueltos y las medias.
  */
-const EXCLUIDOS = [
-  /^GUAYABERA NIÑO NORMAL$/,
-  // Anclados al inicio a propósito: "MEDIA" suelto tumbaría una
-  // "CAMISA MEDIA MANGA", que sí es prenda vendible.
-  /^LOGOS?/,
-  /^MEDIAS?/,
-];
+const EXCLUIDOS_EXACTOS = new Set(["GUAYABERA NIÑO NORMAL"]);
+
+/**
+ * Se compara la PRIMERA PALABRA del nombre, no una subcadena: así cae
+ * "MEDIAS BLANCAS" pero se sigue publicando una "CAMISA MEDIA MANGA".
+ */
+const EXCLUIDOS_POR_PALABRA = new Set(["LOGO", "LOGOS", "MEDIA", "MEDIAS"]);
 
 const excluido = (nombre: string) =>
-  EXCLUIDOS.some((patron) => patron.test(nombre));
+  EXCLUIDOS_EXACTOS.has(nombre) ||
+  EXCLUIDOS_POR_PALABRA.has(nombre.split(" ")[0].toUpperCase());
 
 /**
  * n8n ya cortó una vez la consulta en 50 registros justos, y como Odoo entrega
