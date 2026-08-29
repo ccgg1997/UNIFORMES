@@ -57,7 +57,7 @@ export function Hero() {
             Encuentra el uniforme de tu colegio en pocos pasos.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 hidden flex-wrap gap-3 lg:flex">
             <button
               type="button"
               onClick={() => scrollToSection("prendas")}
