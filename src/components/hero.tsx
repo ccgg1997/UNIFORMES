@@ -146,7 +146,7 @@ function HeroArtwork() {
           fill
           priority
           quality={90}
-          sizes="(max-width: 1024px) 184vw, 1120px"
+          sizes="(max-width: 1024px) 100vw, 1120px"
           className="object-contain object-bottom"
         />
       </div>

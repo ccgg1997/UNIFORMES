@@ -19,6 +19,7 @@ export function ProductDrawer({
   const [size, setSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState(false);
+  const [zoom, setZoom] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
   const titleId = useId();
 
@@ -28,7 +29,12 @@ export function ProductDrawer({
     if (!product) return;
     closeRef.current?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key !== "Escape") return;
+      // la ampliación se cierra primero: el drawer sigue abierto detrás
+      setZoom((open) => {
+        if (!open) onClose();
+        return false;
+      });
     };
     document.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
@@ -99,7 +105,12 @@ export function ProductDrawer({
         <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-6">
           {/* la foto se mide por alto: así las tallas quedan sobre el pliegue
              incluso en pantallas de portátil */}
-          <div className="relative mx-auto aspect-4/5 h-[clamp(180px,30vh,300px)] w-auto overflow-hidden rounded-2xl bg-card-media">
+          <button
+            type="button"
+            onClick={() => setZoom(true)}
+            aria-label={`Ver ${product.name} en grande`}
+            className="group relative mx-auto block aspect-4/5 h-[clamp(180px,30vh,300px)] w-auto overflow-hidden rounded-2xl bg-card-media focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
             <Image
               src={product.image}
               alt={product.name}
@@ -107,7 +118,11 @@ export function ProductDrawer({
               sizes="(max-width: 640px) 60vw, 260px"
               className="object-contain"
             />
-          </div>
+            <span className="absolute bottom-2 right-2 flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-[11px] font-bold text-primary shadow-[0_4px_12px_rgba(7,28,58,0.14)] transition-colors group-hover:bg-background">
+              <ZoomIcon />
+              Ampliar
+            </span>
+          </button>
 
           <p className="mt-5 text-2xl font-extrabold text-ink">
             {formatPrice(product.price)}
@@ -186,6 +201,78 @@ export function ProductDrawer({
           </p>
         </div>
       </div>
+
+      {zoom ? (
+        <ImageLightbox product={product} onClose={() => setZoom(false)} />
+      ) : null}
     </div>
+  );
+}
+
+/** Foto a pantalla completa; se cierra con la X, con el fondo o con Escape. */
+function ImageLightbox({
+  product,
+  onClose,
+}: {
+  product: Product;
+  onClose: () => void;
+}) {
+  return (
+    <div className="absolute inset-0 z-10 flex items-center justify-center bg-ink/80 p-4 sm:p-8">
+      <button
+        type="button"
+        aria-label="Cerrar ampliación"
+        onClick={onClose}
+        className="absolute inset-0 cursor-zoom-out"
+      />
+
+      <div className="pointer-events-none relative h-full max-h-[90vh] w-full max-w-[560px]">
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          sizes="(max-width: 640px) 92vw, 560px"
+          quality={90}
+          className="object-contain"
+        />
+      </div>
+
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Cerrar ampliación"
+        autoFocus
+        className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-background text-ink shadow-[0_6px_18px_rgba(7,28,58,0.24)] transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6 sm:top-6"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          aria-hidden="true"
+          className="size-5"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+function ZoomIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      aria-hidden="true"
+      className="size-3.5"
+    >
+      <circle cx="11" cy="11" r="7" />
+      <path d="M16.5 16.5L21 21M11 8.5v5M8.5 11h5" />
+    </svg>
   );
 }

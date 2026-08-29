@@ -1,0 +1,112 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - button "Manantial de Moda, ir al inicio" [ref=f1e4]:
+        - img "Manantial de Moda, uniformes" [ref=f1e5]
+      - navigation "Navegación principal" [ref=f1e6]:
+        - button "Inicio" [ref=f1e7]
+        - button "Productos" [ref=f1e9]
+      - link "Consultar por WhatsApp" [ref=f1e11] [cursor=pointer]:
+        - /url: https://wa.me/573133534097?text=Hola%20Manantial%20de%20Moda%20%F0%9F%91%8B%0AQuisiera%20informaci%C3%B3n%20sobre%20sus%20uniformes%20escolares.
+  - main [ref=f1e15]:
+    - generic [ref=f1e16]:
+      - generic [ref=f1e17]:
+        - generic [ref=f1e18]:
+          - heading "Uniformes para cada etapa escolar." [level=1] [ref=f1e19]:
+            - text: Uniformes para cada
+            - generic [ref=f1e20]: etapa escolar.
+          - paragraph [ref=f1e22]: Calidad, comodidad y presentación para acompañarlos todos los días. Encuentra el uniforme de tu colegio en pocos pasos.
+          - generic [ref=f1e23]:
+            - button "Ver prendas" [ref=f1e24]
+            - link "Consultar por WhatsApp" [ref=f1e27] [cursor=pointer]:
+              - /url: https://wa.me/573133534097?text=Hola%20Manantial%20de%20Moda%20%F0%9F%91%8B%0AQuisiera%20informaci%C3%B3n%20sobre%20sus%20uniformes%20escolares.
+        - generic [ref=f1e30]:
+          - img "Estudiantes con uniformes de Colegios Arquidiocesanos y Comfandi" [ref=f1e33]
+          - generic [ref=f1e34]:
+            - paragraph [ref=f1e35]: Arquidiocesanos
+            - paragraph [ref=f1e36]: Así luce puesto
+          - generic [ref=f1e38]:
+            - paragraph [ref=f1e39]: Comfandi
+            - paragraph [ref=f1e40]: Comodidad para cada día
+      - generic [ref=f1e42]:
+        - heading "Encuentra tu colegio" [level=2] [ref=f1e43]
+        - generic [ref=f1e51]:
+          - button "Uniformes de Arquidiocesanos Arquidiocesanos Así luce puesto Ver prendas" [ref=f1e52]:
+            - img "Uniformes de Arquidiocesanos" [ref=f1e54]
+            - generic [ref=f1e55]:
+              - generic [ref=f1e56]: Arquidiocesanos
+              - generic [ref=f1e57]: Así luce puesto
+              - generic [ref=f1e58]: Ver prendas
+          - button "Uniformes de Comfandi Comfandi Comodidad para cada día Ver prendas" [ref=f1e61]:
+            - img "Uniformes de Comfandi" [ref=f1e63]
+            - generic [ref=f1e64]:
+              - generic [ref=f1e65]: Comfandi
+              - generic [ref=f1e66]: Comodidad para cada día
+              - generic [ref=f1e67]: Ver prendas
+    - generic [ref=f1e71]:
+      - generic [ref=f1e72]:
+        - generic [ref=f1e73]:
+          - heading "Encuentra tu uniforme" [level=2] [ref=f1e74]
+          - paragraph [ref=f1e82]: Selecciona tu colegio y encuentra las prendas disponibles.
+        - generic [ref=f1e83]:
+          - generic [ref=f1e84]:
+            - button "Todos" [pressed] [ref=f1e85]
+            - button "Arquidiocesanos" [ref=f1e86]
+            - button "Comfandi" [ref=f1e87]
+          - searchbox "Buscar prenda" [ref=f1e89]
+      - generic [ref=f1e90]:
+        - group "Prendas disponibles" [ref=f1e91]:
+          - button "Arquidiocesanos Camiseta Educación Física Camiseta Educación Física $45.000 Consultar talla y disponibilidad" [ref=f1e93]:
+            - generic [ref=f1e94]: Arquidiocesanos
+            - img "Camiseta Educación Física" [ref=f1e96]
+            - generic [ref=f1e97]: Camiseta Educación Física
+            - generic [ref=f1e98]: $45.000
+            - generic [ref=f1e99]: Consultar talla y disponibilidad
+          - button "Arquidiocesanos Sudadera Educación Física Sudadera Educación Física $80.000 Consultar talla y disponibilidad" [ref=f1e103]:
+            - generic [ref=f1e104]: Arquidiocesanos
+            - img "Sudadera Educación Física" [ref=f1e106]
+            - generic [ref=f1e107]: Sudadera Educación Física
+            - generic [ref=f1e108]: $80.000
+            - generic [ref=f1e109]: Consultar talla y disponibilidad
+          - button "Arquidiocesanos Jardinera Diaria Jardinera Diaria $90.000 Consultar talla y disponibilidad" [ref=f1e113]:
+            - generic [ref=f1e114]: Arquidiocesanos
+            - img "Jardinera Diaria" [ref=f1e116]
+            - generic [ref=f1e117]: Jardinera Diaria
+            - generic [ref=f1e118]: $90.000
+            - generic [ref=f1e119]: Consultar talla y disponibilidad
+          - button "Comfandi Camiseta Blanca Camiseta Blanca $38.000 Consultar talla y disponibilidad" [ref=f1e123]:
+            - generic [ref=f1e124]: Comfandi
+            - img "Camiseta Blanca" [ref=f1e126]
+            - generic [ref=f1e127]: Camiseta Blanca
+            - generic [ref=f1e128]: $38.000
+            - generic [ref=f1e129]: Consultar talla y disponibilidad
+          - button "Comfandi Pantalón Azul Pantalón Azul $70.000 Consultar talla y disponibilidad" [ref=f1e133]:
+            - generic [ref=f1e134]: Comfandi
+            - img "Pantalón Azul" [ref=f1e136]
+            - generic [ref=f1e137]: Pantalón Azul
+            - generic [ref=f1e138]: $70.000
+            - generic [ref=f1e139]: Consultar talla y disponibilidad
+          - button "Arquidiocesanos Camisa Blanca Camisa Blanca $55.000 Consultar talla y disponibilidad" [ref=f1e143]:
+            - generic [ref=f1e144]: Arquidiocesanos
+            - img "Camisa Blanca" [ref=f1e146]
+            - generic [ref=f1e147]: Camisa Blanca
+            - generic [ref=f1e148]: $55.000
+            - generic [ref=f1e149]: Consultar talla y disponibilidad
+          - button "Arquidiocesanos Pantalón Uniforme Diario Pantalón Uniforme Diario $65.000 Consultar talla y disponibilidad" [ref=f1e153]:
+            - generic [ref=f1e154]: Arquidiocesanos
+            - img "Pantalón Uniforme Diario" [ref=f1e156]
+            - generic [ref=f1e157]: Pantalón Uniforme Diario
+            - generic [ref=f1e158]: $65.000
+            - generic [ref=f1e159]: Consultar talla y disponibilidad
+        - button "Ver prendas anteriores" [disabled]
+        - button "Ver más prendas" [disabled]
+  - contentinfo [ref=f1e162]:
+    - generic [ref=f1e163]:
+      - generic [ref=f1e164]:
+        - img "Manantial de Moda" [ref=f1e165]
+        - generic [ref=f1e166]:
+          - paragraph [ref=f1e167]: Manantial de Moda
+          - paragraph [ref=f1e168]: Uniformes escolares
+          - link "+57 313 353 4097" [ref=f1e169] [cursor=pointer]:
+            - /url: https://wa.me/573133534097
+      - paragraph [ref=f1e172]: © 2024 Manantial de Moda. Todos los derechos reservados.
