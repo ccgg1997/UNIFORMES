@@ -1,0 +1,22 @@
+# Dependencies and builds
+/node_modules/
+/.next/
+/out/
+
+# Local environment
+.env*
+!.env.example
+.vercel/
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+*.log
+*.tsbuildinfo
+/.playwright-cli/
+/output/
+
+# Source material kept outside the public website.
+# This folder includes a private administrative PDF and must never be committed.
+/FOTOS/
+/LOGO.png
