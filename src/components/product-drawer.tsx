@@ -97,12 +97,14 @@ export function ProductDrawer({
         </div>
 
         <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-6">
-          <div className="relative mx-auto aspect-4/5 w-full max-w-[260px] overflow-hidden rounded-2xl bg-card-media sm:max-w-none">
+          {/* la foto se mide por alto: así las tallas quedan sobre el pliegue
+             incluso en pantallas de portátil */}
+          <div className="relative mx-auto aspect-4/5 h-[clamp(180px,30vh,300px)] w-auto overflow-hidden rounded-2xl bg-card-media">
             <Image
               src={product.image}
               alt={product.name}
               fill
-              sizes="(max-width: 640px) 70vw, 380px"
+              sizes="(max-width: 640px) 60vw, 260px"
               className="object-contain"
             />
           </div>

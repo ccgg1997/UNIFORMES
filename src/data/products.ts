@@ -20,7 +20,7 @@ export const schools: School[] = [
 
 const SIZES = ["6", "8", "10", "12", "14", "16"];
 
-/** Order matters: the first five are the prendas shown before "Ver más prendas". */
+/** Order matters: this is the order the prendas carousel scrolls through. */
 export const products: Product[] = [
   {
     id: "arqui-camiseta-educacion-fisica",

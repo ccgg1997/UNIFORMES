@@ -101,6 +101,15 @@ body {
   background: var(--surface-blue);
 }
 
+/* Carrusel de prendas: se desplaza con las flechas, sin barra visible. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Decorative ----------------------------------------------------------- */
 .heading-mark {
   color: var(--gold);

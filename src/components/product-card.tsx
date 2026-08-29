@@ -14,7 +14,7 @@ export function ProductCard({
     <button
       type="button"
       onClick={() => onSelect(product)}
-      className="group flex flex-col rounded-2xl border border-card-border bg-background p-3 text-left transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:p-3.5"
+      className="group flex h-full w-full flex-col rounded-2xl border border-card-border bg-background p-3 text-left transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:p-3.5"
     >
       <span className="inline-flex self-start rounded-full border border-primary/25 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.07em] text-primary sm:text-[10px]">
         {schoolName(product.school)}

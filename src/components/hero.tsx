@@ -45,11 +45,6 @@ export function Hero() {
 
       <div className="relative mx-auto grid w-full max-w-[1180px] items-center gap-10 px-4 pt-10 pb-4 sm:px-6 lg:grid-cols-[minmax(0,45fr)_minmax(0,55fr)] lg:gap-8 lg:px-8 lg:pt-12 lg:pb-6">
         <div className="relative z-10 max-w-xl">
-          <p className="flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.16em] text-muted sm:text-xs">
-            <span className="size-1.5 rounded-full bg-gold" />
-            Catálogo de uniformes escolares
-          </p>
-
           <h1 className="mt-5 text-[2.5rem] font-extrabold leading-[1.08] tracking-[-0.035em] text-ink sm:text-[3.15rem]">
             Uniformes para cada{" "}
             <span className="text-primary lg:block">etapa escolar.</span>
@@ -87,7 +82,7 @@ export function Hero() {
             </WhatsAppButton>
           </div>
 
-          <ul className="mt-9 flex flex-wrap gap-x-8 gap-y-5">
+          {/* <ul className="mt-9 flex flex-wrap gap-x-8 gap-y-5">
             {BENEFITS.map((benefit) => (
               <li key={benefit.lines[0]} className="flex items-center gap-2.5">
                 <svg
@@ -109,7 +104,7 @@ export function Hero() {
                 </span>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
 
         <HeroArtwork />
@@ -122,7 +117,7 @@ export function Hero() {
 
 function HeroArtwork() {
   return (
-    <div className="relative mx-auto w-full max-w-[440px] pt-12 sm:max-w-[500px] lg:pt-14">
+    <div className="relative mx-auto w-full max-w-[480px] pt-12 sm:max-w-[560px] lg:pt-14">
       {/* soft stage: one almost-white circle and a single thin gold arc */}
       <div
         aria-hidden="true"
@@ -142,26 +137,31 @@ function HeroArtwork() {
         />
       </svg>
 
-      <div className="relative aspect-[1042/1250] w-full">
+      {/* sizes pide el doble de densidad: la caja mide 560px pero el archivo
+          nativo tiene 1134px, así el navegador no baja a la versión de 640w */}
+      <div className="relative aspect-[1134/1070] w-full">
         <Image
           src="/images/hero/estudiantes.webp"
           alt="Estudiantes con uniformes de Colegios Arquidiocesanos y Comfandi"
           fill
           priority
-          sizes="(max-width: 1024px) 90vw, 500px"
+          quality={90}
+          sizes="(max-width: 1024px) 184vw, 1120px"
           className="object-contain object-bottom"
         />
       </div>
 
+      {/* the tails aim at each school's kids: Arquidiocesanos on the left of the
+          group, Comfandi (white polo + royal blue) in the middle-right */}
       <SchoolTag
         className="left-0 top-0 bg-primary"
-        tailClassName="left-7 bg-primary"
+        tailClassName="left-20 bg-primary"
         name="Arquidiocesanos"
         tagline="Así luce puesto"
       />
       <SchoolTag
         className="right-0 top-0 bg-cyan"
-        tailClassName="right-9 bg-cyan"
+        tailClassName="left-4 bg-cyan"
         name="Comfandi"
         tagline="Comodidad para cada día"
       />

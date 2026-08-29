@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { ProductCard } from "@/components/product-card";
 import { ProductDrawer } from "@/components/product-drawer";
@@ -16,20 +16,19 @@ const FILTERS: { id: Filter; label: string }[] = [
   ...schools.map((school) => ({ id: school.id as Filter, label: school.name })),
 ];
 
-const INITIAL_COUNT = 5;
-
 export function ProductsSection() {
   const [filter, setFilter] = useState<Filter>("todos");
   const [query, setQuery] = useState("");
-  const [expanded, setExpanded] = useState(false);
   const [selected, setSelected] = useState<Product | null>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+  const trackRef = useRef<HTMLDivElement | null>(null);
 
   // The school cards up in Inicio drive this filter.
   useEffect(() => {
     const onFilter = (event: Event) => {
       setFilter((event as CustomEvent<Filter>).detail);
       setQuery("");
-      setExpanded(false);
     };
     window.addEventListener(SCHOOL_FILTER_EVENT, onFilter);
     return () => window.removeEventListener(SCHOOL_FILTER_EVENT, onFilter);
@@ -44,8 +43,38 @@ export function ProductsSection() {
     });
   }, [filter, query]);
 
-  const visible = expanded ? matches : matches.slice(0, INITIAL_COUNT);
-  const hasMore = matches.length > INITIAL_COUNT;
+  // Arrows only make sense while there is something left to reveal.
+  const syncArrows = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const max = track.scrollWidth - track.clientWidth;
+    setCanPrev(track.scrollLeft > 8);
+    setCanNext(track.scrollLeft < max - 8);
+  }, []);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    syncArrows();
+    const observer = new ResizeObserver(syncArrows);
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, [syncArrows]);
+
+  // A new filter or search starts the row over at the first prenda.
+  useEffect(() => {
+    trackRef.current?.scrollTo({ left: 0 });
+    syncArrows();
+  }, [filter, query, syncArrows]);
+
+  const scrollByPage = (direction: 1 | -1) => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.scrollBy({
+      left: direction * track.clientWidth * 0.85,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section id="prendas" className="scroll-mt-24 bg-surface-blue py-14 lg:py-18">
@@ -67,10 +96,7 @@ export function ProductsSection() {
                   <button
                     key={option.id}
                     type="button"
-                    onClick={() => {
-                      setFilter(option.id);
-                      setExpanded(false);
-                    }}
+                    onClick={() => setFilter(option.id)}
                     aria-pressed={active}
                     className={`h-10 shrink-0 rounded-full border px-4 text-[13px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
                       active
@@ -100,10 +126,7 @@ export function ProductsSection() {
               <input
                 type="search"
                 value={query}
-                onChange={(event) => {
-                  setQuery(event.target.value);
-                  setExpanded(false);
-                }}
+                onChange={(event) => setQuery(event.target.value)}
                 placeholder="Buscar prenda..."
                 aria-label="Buscar prenda"
                 className="h-10 w-full rounded-full border border-border bg-background pl-10 pr-4 text-[13px] text-ink outline-none transition-colors placeholder:text-muted focus:border-primary/50"
@@ -112,33 +135,38 @@ export function ProductsSection() {
           </div>
         </div>
 
-        {visible.length ? (
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {visible.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onSelect={setSelected}
-              />
-            ))}
+        {matches.length ? (
+          <div className="relative mt-8">
+            <div
+              ref={trackRef}
+              onScroll={syncArrows}
+              role="group"
+              aria-label="Prendas disponibles"
+              className="no-scrollbar grid snap-x snap-mandatory grid-flow-col auto-cols-[44%] gap-3 overflow-x-auto scroll-smooth pb-1 sm:auto-cols-[30%] sm:gap-4 md:auto-cols-[23%] xl:auto-cols-[18.4%]"
+            >
+              {matches.map((product) => (
+                <div key={product.id} className="h-full snap-start">
+                  <ProductCard product={product} onSelect={setSelected} />
+                </div>
+              ))}
+            </div>
+
+            <CarouselArrow
+              direction="prev"
+              disabled={!canPrev}
+              onClick={() => scrollByPage(-1)}
+            />
+            <CarouselArrow
+              direction="next"
+              disabled={!canNext}
+              onClick={() => scrollByPage(1)}
+            />
           </div>
         ) : (
           <p className="mt-10 text-center text-sm text-muted">
             No encontramos prendas con esa búsqueda.
           </p>
         )}
-
-        {hasMore && !expanded ? (
-          <div className="mt-9 flex justify-center">
-            <button
-              type="button"
-              onClick={() => setExpanded(true)}
-              className="btn btn-primary h-11 px-6"
-            >
-              Ver más prendas
-            </button>
-          </div>
-        ) : null}
       </div>
 
       <ProductDrawer
@@ -147,5 +175,41 @@ export function ProductsSection() {
         onClose={() => setSelected(null)}
       />
     </section>
+  );
+}
+
+function CarouselArrow({
+  direction,
+  disabled,
+  onClick,
+}: {
+  direction: "prev" | "next";
+  disabled: boolean;
+  onClick: () => void;
+}) {
+  const isNext = direction === "next";
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={isNext ? "Ver más prendas" : "Ver prendas anteriores"}
+      className={`absolute top-1/2 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-card-border bg-background text-primary shadow-[0_6px_18px_rgba(7,28,58,0.12)] transition-opacity hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-0 ${
+        isNext ? "right-0 translate-x-1/2" : "left-0 -translate-x-1/2"
+      }`}
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2.2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        className="size-4"
+      >
+        <path d={isNext ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6"} />
+      </svg>
+    </button>
   );
 }

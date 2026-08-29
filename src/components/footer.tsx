@@ -11,7 +11,7 @@ export function Footer() {
         className="pointer-events-none absolute -right-4 -top-6 h-[190%] w-auto opacity-70"
       />
 
-      <div className="relative mx-auto flex w-full max-w-[1180px] flex-col gap-6 px-4 py-8 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+      <div className="relative mx-auto flex w-full max-w-[1180px] flex-col gap-6 px-4 pb-14 pt-8 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
         <div className="flex items-center gap-4">
           <Image
             src="/images/brand/logo.webp"
