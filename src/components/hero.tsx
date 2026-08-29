@@ -42,9 +42,9 @@ export function Hero() {
       {/* page-edge decoration: sits behind everything, cropped by the section */}
       <SchoolDoodles className="pointer-events-none absolute right-0 top-10 hidden h-[560px] w-auto lg:block" />
 
-      <div className="relative mx-auto grid w-full max-w-[1180px] items-center gap-10 px-4 pt-10 pb-4 sm:px-6 lg:grid-cols-[minmax(0,45fr)_minmax(0,55fr)] lg:gap-8 lg:px-8 lg:pt-12 lg:pb-6">
+      <div className="relative mx-auto grid w-full max-w-[1180px] items-center gap-5 px-4 pt-4 pb-4 sm:px-6 sm:pt-8 lg:grid-cols-[minmax(0,45fr)_minmax(0,55fr)] lg:gap-8 lg:px-8 lg:pt-12 lg:pb-6">
         <div className="relative z-10 max-w-xl">
-          <h1 className="mt-5 text-[2.5rem] font-extrabold leading-[1.08] tracking-[-0.035em] text-ink sm:text-[3.15rem]">
+          <h1 className="mt-0 text-[2.5rem] font-extrabold leading-[1.08] tracking-[-0.035em] text-ink sm:text-[3.15rem] lg:mt-5">
             Uniformes para cada{" "}
             <span className="text-primary lg:block">etapa escolar.</span>
           </h1>
