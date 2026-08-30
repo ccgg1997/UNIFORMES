@@ -8,6 +8,8 @@ import { Header } from "@/components/header";
 import "./globals.css";
 
 const GTM_ID = "GTM-5GFGPG26";
+const GOOGLE_ADS_ID = "AW-18416101049";
+const GOOGLE_ADS_CONVERSION_LABEL = "V9pzCLmdz-ocELnNvc1E";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -68,6 +70,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','${GTM_ID}');`}
         </Script>
         {/* End Google Tag Manager */}
+
+        {/* Google tag (gtag.js) — Google Ads */}
+        <Script
+          id="google-ads-lib"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GOOGLE_ADS_ID}');
+gtag('event', 'conversion', {'send_to': '${GOOGLE_ADS_ID}/${GOOGLE_ADS_CONVERSION_LABEL}'});`}
+        </Script>
+        {/* End Google tag */}
       </head>
       <body className={`${manrope.variable} antialiased`}>
         {/* Google Tag Manager (noscript) */}
