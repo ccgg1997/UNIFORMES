@@ -44,6 +44,42 @@ Para actualizar manualmente el snapshot de respaldo:
 pnpm sync:inventory
 ```
 
+## SEO
+
+La URL canónica es `https://www.manantialdemoda.com` (`src/lib/site.ts`; se
+puede sobreescribir con `NEXT_PUBLIC_SITE_URL`). Ya está implementado:
+
+- Metatítulos y metadescripciones únicos por página, canónicas y un solo H1
+  por página (distinto del meta-título).
+- `robots.txt` y `sitemap.xml` generados por `src/app/robots.ts` y
+  `src/app/sitemap.ts`. `/inventario` lleva `noindex` y está bloqueado en
+  robots junto con `/api/` y `/page/`.
+- `public/llms.txt` describe el sitio para asistentes de IA.
+- JSON-LD: `ClothingStore` (negocio local, en el layout) y `FAQPage`
+  (sección de preguntas frecuentes del inicio, `src/data/faq.ts`).
+- CTA fijo de WhatsApp en móvil y botón de compartir en el footer.
+
+### Pasos manuales pendientes
+
+**GA4** (recomendado: vía el GTM ya instalado, `GTM-5GFGPG26`):
+
+1. En [analytics.google.com](https://analytics.google.com) crea la propiedad
+   "Manantial de Moda" y copia el ID de medición `G-XXXXXXXXXX`.
+2. En [tagmanager.google.com](https://tagmanager.google.com), dentro del
+   contenedor `GTM-5GFGPG26`: Etiquetas → Nueva → "Google Analytics: etiqueta
+   de Google", pega el ID `G-…`, activador "All Pages" y publica el
+   contenedor. No hace falta tocar el código.
+
+**Google Search Console**:
+
+1. En [search.google.com/search-console](https://search.google.com/search-console)
+   agrega la propiedad de dominio `manantialdemoda.com` (verificación por DNS,
+   la opción recomendada) o la propiedad de prefijo
+   `https://www.manantialdemoda.com`.
+2. Si eliges verificación por meta tag, agrega el código en
+   `metadata.verification.google` dentro de `src/app/layout.tsx`.
+3. Ya verificado, ve a **Sitemaps** y envía `https://www.manantialdemoda.com/sitemap.xml`.
+
 ## Verificación
 
 ```bash
