@@ -1,0 +1,25 @@
+# Manantial de Moda
+
+> Tienda de uniformes escolares en Cali, Colombia. Vendemos las prendas del uniforme diario y de educación física para los Colegios Arquidiocesanos y los colegios Comfandi. No hay pagos en línea: el cliente elige la prenda y la talla en el catálogo y confirma su pedido por WhatsApp con atención personalizada.
+
+Datos clave:
+- Ciudad: Cali, Valle del Cauca, Colombia.
+- Dirección: Calle 89 # 24J-54, barrio Compartir, Cali.
+- WhatsApp: +57 313 353 4097.
+- Colegios atendidos: Colegios Arquidiocesanos y Comfandi.
+- Prendas: camisas, camisetas, pantalones, jardineras y sudaderas (uniforme diario y de educación física).
+- Los precios, tallas y existencias del catálogo se sincronizan a diario con el inventario de la tienda.
+
+## Páginas
+
+- [Inicio](https://www.manantialdemoda.com/): presentación de la tienda, acceso rápido por colegio, prendas destacadas y preguntas frecuentes.
+- [Catálogo de productos](https://www.manantialdemoda.com/productos): grilla completa de prendas con filtro por colegio, tallas y precios actualizados.
+- [Uniformes Arquidiocesanos](https://www.manantialdemoda.com/productos?colegio=arquidiocesanos): catálogo filtrado para Colegios Arquidiocesanos.
+- [Uniformes Comfandi](https://www.manantialdemoda.com/productos?colegio=comfandi): catálogo filtrado para colegios Comfandi.
+
+## Cómo comprar
+
+1. Abre el catálogo y filtra por tu colegio.
+2. Elige la prenda y revisa tallas, precios y disponibilidad.
+3. Escríbenos por WhatsApp (+57 313 353 4097) con la prenda y la talla; el mensaje se precarga automáticamente desde el sitio.
+4. Confirmamos el pedido y la entrega directamente por chat. No se realizan pagos en línea.
