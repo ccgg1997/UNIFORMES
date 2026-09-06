@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "Inventario",
   // Página de consulta interna: no debe aparecer en Google.
   robots: { index: false, follow: false },
+  // Evita heredar la canónica "/" del layout.
+  alternates: { canonical: "/inventario" },
 };
 
 export default async function InventarioPage() {

@@ -23,13 +23,16 @@ export function SectionHeading({
   children,
   align = "center",
   className = "",
+  as: Tag = "h2",
 }: {
   children: ReactNode;
   align?: "center" | "left";
   className?: string;
+  /** "h1" cuando el título encabeza la página (ej. /productos). */
+  as?: "h1" | "h2";
 }) {
   return (
-    <h2
+    <Tag
       className={`flex items-center gap-3 text-[1.6rem] font-extrabold tracking-[-0.025em] text-ink sm:text-[2rem] ${
         align === "center" ? "justify-center" : ""
       } ${className}`}
@@ -37,6 +40,6 @@ export function SectionHeading({
       <Mark />
       <span>{children}</span>
       <Mark flip />
-    </h2>
+    </Tag>
   );
 }

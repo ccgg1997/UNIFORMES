@@ -4,6 +4,9 @@ import Script from "next/script";
 
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { MobileCtaBar } from "@/components/mobile-cta-bar";
+import { WHATSAPP_PHONE } from "@/data/products";
+import { BUSINESS_ADDRESS, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
 
@@ -17,37 +20,58 @@ const manrope = Manrope({
   display: "swap",
 });
 
-const deploymentHost =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000");
-
 export const metadata: Metadata = {
-  metadataBase: new URL(deploymentHost),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Manantial de Moda | Uniformes escolares",
+    // El H1 del inicio dice "Uniformes para cada etapa escolar": el título
+    // apunta a la búsqueda ("uniformes escolares en Cali"), no repite el H1.
+    default: "Uniformes escolares en Cali | Manantial de Moda",
     template: "%s | Manantial de Moda",
   },
   description:
-    "Catálogo de uniformes escolares para Colegios Arquidiocesanos y Comfandi. Consulta tallas y disponibilidad por WhatsApp.",
+    "Tienda de uniformes escolares en Cali para Colegios Arquidiocesanos y Comfandi: uniforme diario y de educación física. Revisa tallas y precios en línea y pide por WhatsApp, sin pagos en línea.",
   keywords: [
     "uniformes escolares",
+    "uniformes escolares Cali",
     "Manantial de Moda",
-    "Comfandi",
-    "Colegios Arquidiocesanos",
+    "uniformes Comfandi",
+    "uniformes Colegios Arquidiocesanos",
   ],
+  // La home no define metadata propia, así que esta canónica es la suya;
+  // /productos e /inventario la sobreescriben con la ruta correspondiente.
+  alternates: { canonical: "/" },
   icons: { icon: "/images/brand/isotipo.webp" },
   openGraph: {
-    title: "Manantial de Moda — Uniformes escolares",
+    siteName: SITE_NAME,
+    title: "Manantial de Moda — Uniformes escolares en Cali",
     description:
-      "Calidad, comodidad y presentación para acompañarlos todos los días.",
+      "Uniformes de Colegios Arquidiocesanos y Comfandi: calidad, comodidad y presentación para acompañarlos todos los días.",
     images: ["/images/hero/estudiantes.webp"],
     locale: "es_CO",
     type: "website",
   },
+};
+
+/** Schema de negocio local: tienda física de ropa en Cali. */
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "ClothingStore",
+  "@id": `${SITE_URL}/#negocio`,
+  name: SITE_NAME,
+  description:
+    "Tienda de uniformes escolares en Cali para Colegios Arquidiocesanos y Comfandi.",
+  url: SITE_URL,
+  telephone: `+${WHATSAPP_PHONE}`,
+  image: `${SITE_URL}/images/brand/logo.webp`,
+  logo: `${SITE_URL}/images/brand/logo.webp`,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: BUSINESS_ADDRESS.street,
+    addressLocality: BUSINESS_ADDRESS.city,
+    addressRegion: BUSINESS_ADDRESS.region,
+    addressCountry: BUSINESS_ADDRESS.country,
+  },
+  currenciesAccepted: "COP",
 };
 
 export const viewport: Viewport = {
@@ -100,6 +124,13 @@ gtag('event', 'conversion', {'send_to': '${GOOGLE_ADS_ID}/${GOOGLE_ADS_CONVERSIO
         <Header />
         <main>{children}</main>
         <Footer />
+        <MobileCtaBar />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(localBusinessSchema).replace(/</g, "\\u003c"),
+          }}
+        />
       </body>
     </html>
   );

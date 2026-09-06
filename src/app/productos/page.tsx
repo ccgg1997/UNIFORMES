@@ -3,12 +3,15 @@ import type { Metadata } from "next";
 import { ProductsCatalog, type CatalogFilter } from "@/components/products-catalog";
 import { schools } from "@/data/products";
 import { getCatalog } from "@/lib/catalog";
-import { SCHOOL_PARAM } from "@/lib/routes";
+import { PRODUCTS_PATH, SCHOOL_PARAM } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "Productos",
+  // Distinto del título del inicio y del H1 de esta página ("Encuentra tu uniforme").
+  title: "Catálogo de uniformes Arquidiocesanos y Comfandi",
   description:
-    "Grilla completa de uniformes escolares para Colegios Arquidiocesanos y Comfandi. Elige una prenda y consulta talla y disponibilidad por WhatsApp.",
+    "Catálogo completo de prendas del uniforme diario y de educación física para Colegios Arquidiocesanos y Comfandi en Cali. Filtra por colegio, revisa tallas y precios, y pide por WhatsApp.",
+  // Las variantes ?colegio= canonicalizan aquí para no duplicar contenido.
+  alternates: { canonical: PRODUCTS_PATH },
 };
 
 /** ?colegio=comfandi comes from the school cards in Inicio; anything else is "todos". */

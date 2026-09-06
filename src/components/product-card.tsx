@@ -31,7 +31,7 @@ export function ProductCard({
       <span className="relative mt-3 block aspect-4/5 w-full overflow-hidden rounded-xl bg-card-media">
         <Image
           src={product.image}
-          alt={product.name}
+          alt={`${product.name}, uniforme escolar de ${schoolName(product.school)}`}
           fill
           sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, (max-width: 1280px) 24vw, 220px"
           className="object-contain transition-transform duration-200 group-hover:scale-[1.02]"

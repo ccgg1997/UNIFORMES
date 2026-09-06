@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { ProductCard } from "@/components/product-card";
 import { ProductDrawer } from "@/components/product-drawer";
 import { SectionHeading } from "@/components/section-heading";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import { schools } from "@/data/products";
 import type { Product, SchoolId } from "@/types/product";
 
@@ -45,10 +46,18 @@ export function ProductsCatalog({
       <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
           <div>
-            <SectionHeading align="left">Encuentra tu uniforme</SectionHeading>
+            {/* único H1 de /productos; el meta-título dice "Catálogo de uniformes…" */}
+            <SectionHeading as="h1" align="left">
+              Encuentra tu uniforme
+            </SectionHeading>
             <p className="mt-3 text-[13px] text-muted sm:text-sm">
-              Selecciona tu colegio y encuentra las prendas disponibles.
+              Selecciona tu colegio y encuentra las prendas del uniforme diario
+              y de educación física disponibles.
             </p>
+            {/* CTA justo después del primer párrafo */}
+            <WhatsAppButton className="btn btn-secondary mt-4 h-10 px-4 text-[13px]">
+              ¿Dudas con la talla? Escríbenos
+            </WhatsAppButton>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:shrink-0 lg:pt-1">
