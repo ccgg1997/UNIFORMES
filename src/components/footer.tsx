@@ -3,8 +3,9 @@ import Link from "next/link";
 
 import { SchoolDoodles } from "@/components/school-doodles";
 import { ShareButton } from "@/components/share-button";
+import { WhatsAppDisplay } from "@/components/whatsapp-display";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
-import { WHATSAPP_DISPLAY, WHATSAPP_PHONE } from "@/data/products";
+import { whatsappDisplay, whatsappPhone } from "@/data/products";
 import { productsHref } from "@/lib/routes";
 import { BUSINESS_ADDRESS } from "@/lib/site";
 
@@ -47,13 +48,13 @@ export function Footer() {
                 {BUSINESS_ADDRESS.city}, {BUSINESS_ADDRESS.region}
               </p>
               <a
-                href={`https://wa.me/${WHATSAPP_PHONE}`}
+                href={`https://wa.me/${whatsappPhone()}`}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-2 inline-flex items-center gap-2 text-[13px] font-semibold text-ink transition-colors hover:text-primary"
               >
                 <WhatsAppIcon className="size-4 text-whatsapp" />
-                {WHATSAPP_DISPLAY}
+                <WhatsAppDisplay rendered={whatsappDisplay()} />
               </a>
             </div>
           </div>

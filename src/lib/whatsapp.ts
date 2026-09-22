@@ -3,7 +3,7 @@ import {
   productDefinitions,
   schoolName,
   schools,
-  WHATSAPP_PHONE,
+  whatsappPhone,
 } from "@/data/products";
 import type { Cart, OrderContext, OrderLine } from "@/types/cart";
 import type { Product, ProductVariant, SchoolId } from "@/types/product";
@@ -22,7 +22,7 @@ const PRODUCT_ORDER = new Map(
 );
 
 function link(message: string) {
-  return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${whatsappPhone()}?text=${encodeURIComponent(message)}`;
 }
 
 /**

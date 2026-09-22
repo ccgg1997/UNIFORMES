@@ -1,7 +1,29 @@
 import type { ProductDefinition, School, SchoolId } from "@/types/product";
 
+/** Número de siempre de la tienda. */
 export const WHATSAPP_PHONE = "573133534097";
 export const WHATSAPP_DISPLAY = "+57 313 353 4097";
+
+/**
+ * Desvío temporal: Kapso está caído y el número de siempre no recibe los
+ * mensajes del sitio. Hasta el 24 de septiembre de 2026 todo va al número
+ * temporal; desde el 25 a las 00:01 (hora de Colombia) vuelve solo al de
+ * siempre. Pasada la fecha se puede borrar este bloque.
+ */
+const TEMP_WHATSAPP_PHONE = "573186517885";
+const TEMP_WHATSAPP_DISPLAY = "+57 318 651 7885";
+const TEMP_WHATSAPP_UNTIL = Date.parse("2026-09-25T00:01:00-05:00");
+
+const isTempWhatsApp = (now: number) => now < TEMP_WHATSAPP_UNTIL;
+
+/** Número al que deben ir los mensajes en este momento. */
+export function whatsappPhone(now = Date.now()) {
+  return isTempWhatsApp(now) ? TEMP_WHATSAPP_PHONE : WHATSAPP_PHONE;
+}
+
+export function whatsappDisplay(now = Date.now()) {
+  return isTempWhatsApp(now) ? TEMP_WHATSAPP_DISPLAY : WHATSAPP_DISPLAY;
+}
 
 export const schools: School[] = [
   {

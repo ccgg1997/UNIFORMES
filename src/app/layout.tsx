@@ -7,6 +7,7 @@ import { CartProvider } from "@/components/cart-provider";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { MobileCtaBar } from "@/components/mobile-cta-bar";
+import { WhatsAppNumberGuard } from "@/components/whatsapp-number-guard";
 import { WHATSAPP_PHONE } from "@/data/products";
 import { getCatalog } from "@/lib/catalog";
 import { BUSINESS_ADDRESS, SITE_NAME, SITE_URL } from "@/lib/site";
@@ -138,6 +139,7 @@ gtag('event', 'conversion', {'send_to': '${GOOGLE_ADS_ID}/${GOOGLE_ADS_CONVERSIO
           <Footer />
           <MobileCtaBar />
           <CartPanel />
+          <WhatsAppNumberGuard />
         </CartProvider>
         <script
           type="application/ld+json"
