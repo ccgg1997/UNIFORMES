@@ -7,6 +7,7 @@ import { ProductDrawer } from "@/components/product-drawer";
 import { SectionHeading } from "@/components/section-heading";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { schools } from "@/data/products";
+import { matchesQuery } from "@/lib/search";
 import type { Product, SchoolId } from "@/types/product";
 
 export type CatalogFilter = SchoolId | "todos";
@@ -32,14 +33,15 @@ export function ProductsCatalog({
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Product | null>(null);
 
-  const matches = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return products.filter((product) => {
-      const bySchool = filter === "todos" || product.school === filter;
-      const byName = !needle || product.name.toLowerCase().includes(needle);
-      return bySchool && byName;
-    });
-  }, [products, filter, query]);
+  const matches = useMemo(
+    () =>
+      products.filter(
+        (product) =>
+          (filter === "todos" || product.school === filter) &&
+          matchesQuery(product, query),
+      ),
+    [products, filter, query],
+  );
 
   return (
     <section className="min-h-[70svh] bg-surface-blue py-10 lg:py-14">

@@ -7,7 +7,7 @@ Datos clave:
 - Dirección: Calle 89 # 24J-54, barrio Compartir, Cali.
 - WhatsApp: +57 313 353 4097.
 - Colegios atendidos: Colegios Arquidiocesanos y Comfandi.
-- Prendas: camisas, camisetas, pantalones, jardineras y sudaderas (uniforme diario y de educación física).
+- Prendas: guayaberas, camibusos, camisas de educación física, pantalones, jardineras y sudaderas (uniforme diario y de educación física).
 - Los precios, tallas y existencias del catálogo se sincronizan a diario con el inventario de la tienda.
 
 ## Páginas
@@ -21,5 +21,5 @@ Datos clave:
 
 1. Abre el catálogo y filtra por tu colegio.
 2. Elige la prenda y revisa tallas, precios y disponibilidad.
-3. Escríbenos por WhatsApp (+57 313 353 4097) con la prenda y la talla; el mensaje se precarga automáticamente desde el sitio.
+3. Agrega al carrito las prendas que necesites y envíalas en un solo mensaje de WhatsApp (+57 313 353 4097), agrupadas por colegio; si solo te interesa una prenda, puedes consultarla directamente. El mensaje se precarga desde el sitio y pide confirmar precio y disponibilidad.
 4. Confirmamos el pedido y la entrega directamente por chat. No se realizan pagos en línea.

@@ -8,6 +8,7 @@ import { ProductDrawer } from "@/components/product-drawer";
 import { SectionHeading } from "@/components/section-heading";
 import { schools } from "@/data/products";
 import { PRODUCTS_PATH } from "@/lib/routes";
+import { matchesQuery } from "@/lib/search";
 import type { Product, SchoolId } from "@/types/product";
 
 type Filter = SchoolId | "todos";
@@ -25,14 +26,15 @@ export function ProductsSection({ products }: { products: Product[] }) {
   const [canNext, setCanNext] = useState(false);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
-  const matches = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return products.filter((product) => {
-      const bySchool = filter === "todos" || product.school === filter;
-      const byName = !needle || product.name.toLowerCase().includes(needle);
-      return bySchool && byName;
-    });
-  }, [products, filter, query]);
+  const matches = useMemo(
+    () =>
+      products.filter(
+        (product) =>
+          (filter === "todos" || product.school === filter) &&
+          matchesQuery(product, query),
+      ),
+    [products, filter, query],
+  );
 
   // Arrows only make sense while there is something left to reveal.
   const syncArrows = useCallback(() => {

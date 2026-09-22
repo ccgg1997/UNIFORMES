@@ -9,6 +9,10 @@ export type School = {
 };
 
 export type ProductVariant = {
+  /**
+   * Único por variante en Odoo (producto + talla). Es la clave de línea del
+   * carrito: sobrevive a que renombremos la prenda en el sitio.
+   */
   odooId: number;
   size: string;
   /** Colombian pesos. */
@@ -18,12 +22,28 @@ export type ProductVariant = {
 
 /** Static presentation metadata for a product backed by Odoo. */
 export type ProductDefinition = {
+  /** Slug de presentación. NO lo persistas: el carrito usa `odooId`. */
   id: string;
+  /**
+   * Nombre que ve el cliente. Regla: parte del sustantivo que usa Odoo (y que
+   * usa la tienda al responder por WhatsApp) y solo agrega lo que Odoo ya
+   * implica. Nunca inventa una prenda ni un color que Odoo no tenga, y nunca
+   * lleva el colegio: la tarjeta, el drawer, el carrito y el mensaje ya lo
+   * muestran por su cuenta.
+   */
   name: string;
   school: SchoolId;
   image: string;
   /** Nombre exacto del producto en Odoo, sin la talla. */
   odooName: string;
+  /** Aclaración de una línea. Solo UI: nunca viaja en el mensaje de WhatsApp. */
+  descriptor?: string;
+  /**
+   * Lo que el cliente escribe en el buscador, incluidos los nombres viejos.
+   * Solo se compara: NUNCA se renderiza, o volveríamos a publicar en el HTML
+   * el nombre equivocado que estamos corrigiendo.
+   */
+  searchAliases?: string[];
 };
 
 /** Client-serializable catalog product resolved from the inventory source. */

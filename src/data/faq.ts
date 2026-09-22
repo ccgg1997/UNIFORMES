@@ -16,13 +16,13 @@ export const faqItems: FaqItem[] = [
   {
     question: "¿Qué uniformes escolares venden?",
     answer:
-      "Vendemos las prendas del uniforme diario y de educación física para los Colegios Arquidiocesanos y los colegios Comfandi: camisas, camisetas, pantalones, jardineras y sudaderas.",
+      "Vendemos las prendas del uniforme diario y de educación física para los Colegios Arquidiocesanos y los colegios Comfandi: guayaberas, camibusos, camisas de educación física, pantalones, jardineras y sudaderas.",
     link: { href: productsHref(), label: "Ver el catálogo completo" },
   },
   {
     question: "¿Cómo hago un pedido?",
     answer:
-      "Elige la prenda en el catálogo, selecciona la talla y la cantidad, y el sitio abre WhatsApp con tu pedido ya escrito. Confirmamos precio, disponibilidad y entrega directamente por chat: no hay pagos en línea.",
+      "Elige la prenda en el catálogo, selecciona la talla y la cantidad y agrégala al carrito. Cuando termines, el sitio abre WhatsApp con todas tus prendas en un solo mensaje, agrupadas por colegio; si solo te interesa una, puedes consultarla directamente. Confirmamos precio, disponibilidad y entrega por chat: no hay pagos en línea.",
     link: { href: productsHref(), label: "Elegir una prenda" },
   },
   {

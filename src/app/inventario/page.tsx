@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { formatPrice } from "@/data/products";
+import { formatPrice, productDefinitions } from "@/data/products";
 import { getInventory } from "@/lib/inventory";
 
 export const metadata: Metadata = {
@@ -20,6 +20,15 @@ export default async function InventarioPage() {
       total + product.sizes.reduce((sum, size) => sum + size.stock, 0),
     0,
   );
+
+  // Un producto publicado en Odoo sin ficha en products.ts desaparece del sitio
+  // sin que nadie se entere. Aquí se ve.
+  const conFicha = new Set(
+    productDefinitions.map((definition) => definition.odooName),
+  );
+  const sinFicha = products
+    .map((product) => product.odooName)
+    .filter((odooName) => !conFicha.has(odooName));
 
   return (
     <section className="min-h-[70svh] bg-surface-blue py-10 lg:py-14">
@@ -52,6 +61,13 @@ export default async function InventarioPage() {
         {excluded.length ? (
           <p className="mt-4 text-[13px] text-muted">
             Excluidos a propósito: {excluded.join(", ")}.
+          </p>
+        ) : null}
+
+        {sinFicha.length ? (
+          <p className="mt-4 rounded-xl border border-gold/40 bg-gold/10 px-4 py-3 text-[13px] font-semibold text-ink">
+            En Odoo pero sin ficha en la web (falta la foto o la definición en
+            src/data/products.ts): {sinFicha.join(", ")}.
           </p>
         ) : null}
 
