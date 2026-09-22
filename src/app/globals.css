@@ -129,3 +129,16 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* El contador del carrito salta al cambiar: sin ese pulso, agregar una prenda
+   desde el drawer (que tapa el header) se siente como que no paso nada.
+   El bloque global de prefers-reduced-motion de mas abajo lo desactiva. */
+@keyframes bump {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+
+.animate-bump {
+  animation: bump 420ms cubic-bezier(0.2, 0.8, 0.3, 1);
+}

@@ -68,8 +68,9 @@ export const productDefinitions: ProductDefinition[] = [
     school: "comfandi",
     image: "/images/productos/comfandi-sudadera.webp",
     odooName: "SUDADERA COMFANDI",
-    // No afirmamos si la referencia trae chaqueta: eso lo confirma la tienda.
-    descriptor: "Azul rey, con el logo de Comfandi.",
+    // La tienda confirmo que la referencia es solo el pantalon: la chaqueta
+    // no se vende por ahora.
+    descriptor: "Pantalón de sudadera azul rey, con el logo de Comfandi.",
     searchAliases: [
       "pantalon azul",
       "pantalon comfandi",
@@ -85,8 +86,9 @@ export const productDefinitions: ProductDefinition[] = [
     school: "arquidiocesanos",
     image: "/images/productos/arqui-sudadera-educacion-fisica.webp",
     odooName: "SUDADERA ED. FISICA ARQUIDIOCESANOS",
-    // Mismo pendiente que la sudadera Comfandi: solo describimos la foto.
-    descriptor: "Azul oscuro, con franja amarilla a los lados.",
+    // Igual que la de Comfandi: solo el pantalon, sin chaqueta.
+    descriptor:
+      "Pantalón de sudadera azul oscuro, con franja amarilla a los lados.",
     searchAliases: [
       "pantalon sudadera",
       "pantalon educacion fisica",
@@ -131,9 +133,7 @@ export const productDefinitions: ProductDefinition[] = [
     id: "arqui-blusa-diario",
     name: "Blusa Diario",
     school: "arquidiocesanos",
-    // PENDIENTE: falta la foto propia. Cuando exista, guardarla en
-    // public/images/productos/arqui-blusa-diario.webp y descomentar la linea.
-    // image: "/images/productos/arqui-blusa-diario.webp",
+    image: "/images/productos/arqui-blusa-diario.webp",
     odooName: "BLUSA DIARIO NIÑA (DEBAJO)",
     descriptor:
       "Blanca, de manga corta, con vivos oscuros en los puños. Va debajo de la jardinera.",
