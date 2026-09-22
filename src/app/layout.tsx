@@ -2,10 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import Script from "next/script";
 
+import { CartPanel } from "@/components/cart-panel";
+import { CartProvider } from "@/components/cart-provider";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { MobileCtaBar } from "@/components/mobile-cta-bar";
 import { WHATSAPP_PHONE } from "@/data/products";
+import { getCatalog } from "@/lib/catalog";
 import { BUSINESS_ADDRESS, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
@@ -79,9 +82,14 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // El badge y el panel del carrito viven aquí, así que la reconciliación
+  // necesita el catálogo vivo también en rutas sin grilla. getCatalog() está
+  // cacheado por tag, así que reusa la misma entrada que leen / y /productos.
+  const products = await getCatalog();
+
   return (
     <html lang="es" data-scroll-behavior="smooth">
       <head>
@@ -121,10 +129,16 @@ gtag('event', 'conversion', {'send_to': '${GOOGLE_ADS_ID}/${GOOGLE_ADS_CONVERSIO
           />
         </noscript>
         {/* End Google Tag Manager (noscript) */}
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <MobileCtaBar />
+        {/* El provider envuelve header, contenido, footer, barra móvil y panel:
+            el carrito tiene que verse y sobrevivir en todas las rutas. `children`
+            sigue renderizándose en el servidor y entra como slot. */}
+        <CartProvider products={products}>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <MobileCtaBar />
+          <CartPanel />
+        </CartProvider>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

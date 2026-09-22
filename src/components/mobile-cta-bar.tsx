@@ -1,12 +1,11 @@
-import Link from "next/link";
-
+import { MobileCartAction } from "@/components/cart-button";
 import { WhatsAppButton } from "@/components/whatsapp-button";
-import { PRODUCTS_PATH } from "@/lib/routes";
 
 /**
  * CTA fijo solo en móvil: en pantallas pequeñas el hero oculta sus botones,
  * así que WhatsApp y el catálogo quedan siempre a un toque del pulgar.
- * z-40 lo deja debajo del header (z-50) y del drawer de producto (z-60).
+ * z-40 lo deja debajo del header (z-50), del drawer de producto (z-60) y del
+ * panel del carrito (z-70).
  */
 export function MobileCtaBar() {
   return (
@@ -18,12 +17,7 @@ export function MobileCtaBar() {
           <WhatsAppButton className="btn btn-primary h-12 flex-1 px-4 text-[13px]">
             Pedir por WhatsApp
           </WhatsAppButton>
-          <Link
-            href={PRODUCTS_PATH}
-            className="btn btn-secondary h-12 flex-1 px-4 text-[13px]"
-          >
-            Ver catálogo
-          </Link>
+          <MobileCartAction />
         </div>
       </div>
     </>

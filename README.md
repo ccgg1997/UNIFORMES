@@ -1,6 +1,6 @@
 # Manantial de Moda — Catálogo de uniformes
 
-One page de uniformes escolares para Colegios Arquidiocesanos y Comfandi. Toda la experiencia vive en `/`: Inicio (hero + acceso rápido por colegio) y Prendas (filtros, grid y drawer de producto). No hay carrito ni checkout: cada consulta abre WhatsApp con el mensaje precargado.
+Catálogo de uniformes escolares para Colegios Arquidiocesanos y Comfandi. Inicio (hero, acceso rápido por colegio, carrusel de prendas y FAQ), `/productos` (grilla completa con filtros) y `/inventario` (consulta interna, sin indexar). Hay carrito pero no checkout ni pagos en línea: se agregan varias prendas y se envían en un solo mensaje de WhatsApp, o se consulta una sola prenda directamente desde su ficha.
 
 ## Stack
 

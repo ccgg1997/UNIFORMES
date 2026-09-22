@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { CartButton } from "@/components/cart-button";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { PRODUCTS_PATH } from "@/lib/routes";
 
@@ -70,10 +71,13 @@ export function Header() {
           })}
         </nav>
 
-        <WhatsAppButton className="btn btn-primary ml-auto h-10 px-4 text-[13px] md:ml-8 md:h-12 md:px-6 md:text-sm">
-          <span className="hidden sm:inline">Consultar por WhatsApp</span>
-          <span className="sm:hidden">WhatsApp</span>
-        </WhatsAppButton>
+        <div className="ml-auto flex items-center gap-2 md:ml-8 md:gap-3">
+          <CartButton />
+          <WhatsAppButton className="btn btn-primary h-10 px-4 text-[13px] md:h-12 md:px-6 md:text-sm">
+            <span className="hidden sm:inline">Consultar por WhatsApp</span>
+            <span className="sm:hidden">WhatsApp</span>
+          </WhatsAppButton>
+        </div>
       </div>
 
       {/* Only two destinations exist, so mobile shows them inline instead of a menu. */}

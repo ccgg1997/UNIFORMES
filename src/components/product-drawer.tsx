@@ -1,11 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useState } from "react";
 
+import { useCart } from "@/components/cart-provider";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { formatPrice, schoolName } from "@/data/products";
-import { openWhatsApp, productWhatsAppUrl } from "@/lib/whatsapp";
+import { pushDataLayer } from "@/lib/analytics";
+import { maxQuantityFor } from "@/lib/cart";
+import { useOverlay } from "@/lib/use-overlay";
+import { productWhatsAppUrl } from "@/lib/whatsapp";
 import type { Product } from "@/types/product";
 
 /** Bottom sheet on mobile, right-hand drawer on desktop. Never a separate route. */
@@ -20,27 +24,18 @@ export function ProductDrawer({
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState(false);
   const [zoom, setZoom] = useState(false);
-  const closeRef = useRef<HTMLButtonElement>(null);
+  const [added, setAdded] = useState(false);
   const titleId = useId();
+  const descriptionId = useId();
+  const { add, open: openCart } = useCart();
 
   // State resets between products because the section remounts the drawer
-  // (key={product.id}); this effect only wires up the open-dialog behaviour.
-  useEffect(() => {
-    if (!product) return;
-    closeRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      // la ampliación se cierra primero: el drawer sigue abierto detrás
-      if (zoom) setZoom(false);
-      else onClose();
-    };
-    document.addEventListener("keydown", onKeyDown);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = "";
-    };
-  }, [product, onClose, zoom]);
+  // (key={product.id}). useOverlay se encarga del foco, del Escape por capas
+  // (la ampliación se cierra antes que el drawer) y del bloqueo de scroll.
+  const dialogRef = useOverlay<HTMLDivElement>({
+    open: Boolean(product),
+    onClose,
+  });
 
   if (!product) return null;
 
@@ -59,16 +54,21 @@ export function ProductDrawer({
     ? Math.max(0, Math.floor(selectedVariant.stock))
     : 0;
   const soldOut = selectedVariant ? availableStock <= 0 : false;
-  const maximumQuantity = selectedVariant
-    ? Math.max(1, Math.min(99, availableStock))
-    : 1;
+  const maximumQuantity = selectedVariant ? maxQuantityFor(selectedVariant) : 1;
 
-  const consult = () => {
+  // La URL se calcula en el render: un <a> con href listo nunca tropieza con
+  // el bloqueador de pop-ups, pase lo que pase con este handler.
+  const whatsappUrl = selectedVariant
+    ? productWhatsAppUrl(product, selectedVariant, quantity)
+    : undefined;
+
+  const addToCart = () => {
     if (!selectedVariant) {
       setError(true);
       return;
     }
-    openWhatsApp(productWhatsAppUrl(product, selectedVariant, quantity));
+    add(product, selectedVariant, quantity);
+    setAdded(true);
   };
 
   return (
@@ -81,9 +81,11 @@ export function ProductDrawer({
       />
 
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        aria-describedby={product.descriptor ? descriptionId : undefined}
         className="absolute inset-x-0 bottom-0 flex max-h-[92vh] flex-col rounded-t-3xl bg-background sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[420px] sm:rounded-none sm:rounded-l-3xl"
       >
         <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
@@ -97,9 +99,16 @@ export function ProductDrawer({
             >
               {product.name}
             </h2>
+            {product.descriptor ? (
+              <p
+                id={descriptionId}
+                className="mt-1 text-[12px] leading-5 text-muted"
+              >
+                {product.descriptor}
+              </p>
+            ) : null}
           </div>
           <button
-            ref={closeRef}
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
@@ -185,6 +194,7 @@ export function ProductDrawer({
                       setVariantId(option.odooId);
                       setQuantity(1);
                       setError(false);
+                      setAdded(false);
                     }}
                     aria-label={`Talla ${option.size}${
                       unavailable ? ", sin existencias" : ""
@@ -211,7 +221,7 @@ export function ProductDrawer({
             ) : null}
             {error ? (
               <p role="alert" className="mt-3 text-[13px] font-semibold text-[#c82b31]">
-                Selecciona una talla para consultar disponibilidad.
+                Selecciona una talla para continuar.
               </p>
             ) : null}
           </fieldset>
@@ -253,17 +263,62 @@ export function ProductDrawer({
         </div>
 
         <div className="border-t border-border bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 sm:px-6">
+          {/* Dos caminos, sin que el cliente tenga que adivinar: sumar esta
+              prenda a una consulta más grande, o preguntar solo por ella. */}
           <button
             type="button"
-            onClick={consult}
+            onClick={addToCart}
             className="btn btn-primary h-12 w-full px-5"
           >
-            <WhatsAppIcon className="size-[18px]" />
-            Consultar por WhatsApp
+            Agregar al carrito
           </button>
-          <p className="mt-3 text-center text-[11px] text-muted">
-            Te atenderemos directamente por WhatsApp.
-          </p>
+
+          <a
+            href={whatsappUrl ?? "#"}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(event) => {
+              if (!selectedVariant) {
+                event.preventDefault();
+                setError(true);
+                return;
+              }
+              pushDataLayer({
+                event: "whatsapp_lead",
+                origen: "producto",
+                currency: "COP",
+                value: selectedVariant.price * quantity,
+                items: [
+                  {
+                    item_id: String(selectedVariant.odooId),
+                    item_name: product.name,
+                    quantity,
+                  },
+                ],
+              });
+            }}
+            className="btn btn-secondary mt-2.5 h-12 w-full px-5"
+          >
+            <WhatsAppIcon className="size-[18px] text-whatsapp" />
+            Consultar solo esta prenda
+          </a>
+
+          {added ? (
+            <p className="mt-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-[12px] font-semibold text-ink">
+              Agregada al carrito.
+              <button
+                type="button"
+                onClick={openCart}
+                className="font-bold text-primary underline underline-offset-4"
+              >
+                Ver carrito
+              </button>
+            </p>
+          ) : (
+            <p className="mt-3 text-center text-[11px] text-muted">
+              Agrega varias prendas y consúltalas todas en un solo mensaje.
+            </p>
+          )}
         </div>
       </div>
 
@@ -274,7 +329,11 @@ export function ProductDrawer({
   );
 }
 
-/** Foto a pantalla completa; se cierra con la X, con el fondo o con Escape. */
+/**
+ * Foto a pantalla completa; se cierra con la X, con el fondo o con Escape.
+ * Al entrar en la pila de capas queda por encima del drawer, así que Escape la
+ * cierra a ella primero y el drawer sigue abierto detrás.
+ */
 function ImageLightbox({
   product,
   onClose,
@@ -282,8 +341,13 @@ function ImageLightbox({
   product: Product;
   onClose: () => void;
 }) {
+  const boxRef = useOverlay<HTMLDivElement>({ open: true, onClose });
+
   return (
-    <div className="absolute inset-0 z-10 flex items-center justify-center bg-ink/80 p-4 sm:p-8">
+    <div
+      ref={boxRef}
+      className="absolute inset-0 z-10 flex items-center justify-center bg-ink/80 p-4 sm:p-8"
+    >
       <button
         type="button"
         aria-label="Cerrar ampliación"
