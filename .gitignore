@@ -21,3 +21,6 @@ Thumbs.db
 # This folder includes a private administrative PDF and must never be committed.
 /FOTOS/
 /LOGO.png
+
+# Cache de los scripts de assets en Python.
+__pycache__/
