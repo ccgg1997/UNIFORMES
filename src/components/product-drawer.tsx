@@ -99,24 +99,50 @@ export function ProductDrawer({
               {product.name}
             </h2>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Cerrar"
-            className="-mr-1 flex size-9 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              aria-hidden="true"
-              className="size-5"
+          {/* El carrito vive ARRIBA, junto a la X: abajo quedaba justo debajo
+              del pulgar que pulsa "Agregar", y la mano tapaba el número que
+              acababa de cambiar. */}
+          <div className="flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={openCart}
+              aria-label={`Abrir carrito, ${prendas(cart.count)}`}
+              className="relative flex size-9 items-center justify-center rounded-full text-primary transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
+              <CartIcon className="size-5" />
+              {cart.count > 0 ? (
+                // key={cart.count} remonta el nodo en cada cambio y por eso la
+                // animación se vuelve a reproducir: ese es el aviso de que la
+                // prenda entró al carrito.
+                <span
+                  key={cart.count}
+                  aria-hidden="true"
+                  className="animate-bump absolute -right-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-gold px-1 text-[10px] font-extrabold leading-none text-ink"
+                >
+                  {cart.count > 99 ? "99+" : cart.count}
+                </span>
+              ) : null}
+            </button>
+
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Cerrar"
+              className="-mr-1 flex size-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                aria-hidden="true"
+                className="size-5"
+              >
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto px-5 py-3 sm:px-6 sm:py-5">
@@ -275,39 +301,14 @@ export function ProductDrawer({
 
         <div className="border-t border-border bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 sm:px-6">
           {/* Dos caminos, sin que el cliente tenga que adivinar: sumar esta
-              prenda a una consulta más grande, o preguntar solo por ella.
-              El carrito va AL LADO del botón de agregar: el header queda
-              tapado por el drawer, así que si el contador no estuviera aquí
-              el cliente pulsaría "Agregar" sin ver que pasó algo. */}
-          <div className="flex items-center gap-2.5">
-            <button
-              type="button"
-              onClick={addToCart}
-              className="btn btn-primary h-12 flex-1 px-4"
-            >
-              Agregar al carrito
-            </button>
-            <button
-              type="button"
-              onClick={openCart}
-              aria-label={`Abrir carrito, ${prendas(cart.count)}`}
-              className="relative flex size-12 shrink-0 items-center justify-center rounded-full border border-border bg-background text-primary transition-colors hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              <CartIcon className="size-5" />
-              {cart.count > 0 ? (
-                // key={cart.count} remonta el nodo en cada cambio, y por eso la
-                // animación se vuelve a reproducir: ese es el "efecto" de que
-                // la prenda entró.
-                <span
-                  key={cart.count}
-                  aria-hidden="true"
-                  className="animate-bump absolute -right-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-gold px-1 text-[10px] font-extrabold leading-none text-ink"
-                >
-                  {cart.count > 99 ? "99+" : cart.count}
-                </span>
-              ) : null}
-            </button>
-          </div>
+              prenda a una consulta más grande, o preguntar solo por ella. */}
+          <button
+            type="button"
+            onClick={addToCart}
+            className="btn btn-primary h-12 w-full px-5"
+          >
+            Agregar al carrito
+          </button>
 
           <a
             href={whatsappUrl ?? "#"}
