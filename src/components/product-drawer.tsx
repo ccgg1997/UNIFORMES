@@ -4,10 +4,11 @@ import Image from "next/image";
 import { useId, useState } from "react";
 
 import { useCart } from "@/components/cart-provider";
+import { PhotoPending } from "@/components/product-card";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { formatPrice, schoolName } from "@/data/products";
 import { pushDataLayer } from "@/lib/analytics";
-import { maxQuantityFor } from "@/lib/cart";
+import { CART_MAX_QUANTITY, isLowStock } from "@/lib/cart";
 import { useOverlay } from "@/lib/use-overlay";
 import { productWhatsAppUrl } from "@/lib/whatsapp";
 import type { Product } from "@/types/product";
@@ -41,20 +42,15 @@ export function ProductDrawer({
 
   const selectedVariant =
     product.variants.find((variant) => variant.odooId === variantId) ?? null;
-  const availableVariants = product.variants.filter((variant) => variant.stock > 0);
-  const pricedVariants = availableVariants.length
-    ? availableVariants
-    : product.variants;
-  const prices = pricedVariants.map((variant) => variant.price);
+  // El rango de precios mira TODAS las tallas: filtrar por existencias haría
+  // que el "Desde" saltara solo porque una talla se agotó.
+  const prices = product.variants.map((variant) => variant.price);
   const minimumPrice = Math.min(...prices);
   const maximumPrice = Math.max(...prices);
   const hasPriceRange = minimumPrice !== maximumPrice;
   const displayedPrice = selectedVariant?.price ?? minimumPrice;
-  const availableStock = selectedVariant
-    ? Math.max(0, Math.floor(selectedVariant.stock))
-    : 0;
-  const soldOut = selectedVariant ? availableStock <= 0 : false;
-  const maximumQuantity = selectedVariant ? maxQuantityFor(selectedVariant) : 1;
+  const lowStock = selectedVariant ? isLowStock(selectedVariant) : false;
+  const maximumQuantity = selectedVariant ? CART_MAX_QUANTITY : 1;
 
   // La URL se calcula en el render: un <a> con href listo nunca tropieza con
   // el bloqueador de pop-ups, pase lo que pase con este handler.
@@ -131,24 +127,32 @@ export function ProductDrawer({
         <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-6">
           {/* la foto se mide por alto: así las tallas quedan sobre el pliegue
              incluso en pantallas de portátil */}
-          <button
-            type="button"
-            onClick={() => setZoom(true)}
-            aria-label={`Ver ${product.name} en grande`}
-            className="group relative mx-auto block aspect-4/5 h-[clamp(180px,30vh,300px)] w-auto overflow-hidden rounded-2xl bg-card-media focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          >
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              sizes="(max-width: 640px) 60vw, 260px"
-              className="object-contain"
-            />
-            <span className="absolute bottom-2 right-2 flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-[11px] font-bold text-primary shadow-[0_4px_12px_rgba(7,28,58,0.14)] transition-colors group-hover:bg-background">
-              <ZoomIcon />
-              Ampliar
+          {/* Sin foto no hay nada que ampliar: el botón se cae y queda el
+              marcador, que no es pulsable. */}
+          {product.image ? (
+            <button
+              type="button"
+              onClick={() => setZoom(true)}
+              aria-label={`Ver ${product.name} en grande`}
+              className="group relative mx-auto block aspect-4/5 h-[clamp(180px,30vh,300px)] w-auto overflow-hidden rounded-2xl bg-card-media focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              <Image
+                src={product.image}
+                alt={product.name}
+                fill
+                sizes="(max-width: 640px) 60vw, 260px"
+                className="object-contain"
+              />
+              <span className="absolute bottom-2 right-2 flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-[11px] font-bold text-primary shadow-[0_4px_12px_rgba(7,28,58,0.14)] transition-colors group-hover:bg-background">
+                <ZoomIcon />
+                Ampliar
+              </span>
+            </button>
+          ) : (
+            <span className="relative mx-auto block aspect-4/5 h-[clamp(180px,30vh,300px)] w-auto overflow-hidden rounded-2xl bg-card-media">
+              <PhotoPending />
             </span>
-          </button>
+          )}
 
           <p
             aria-live="polite"
@@ -157,34 +161,35 @@ export function ProductDrawer({
             {!selectedVariant && hasPriceRange ? "Desde " : ""}
             {formatPrice(displayedPrice)}
           </p>
+          {/* El catálogo no afirma disponibilidad: quien confirma es la tienda
+              por WhatsApp. Lo único que se dice es cuándo quedan pocas, y solo
+              con existencias reales. */}
           <p aria-live="polite" className="mt-1 text-[12px] text-muted">
             {selectedVariant
-              ? soldOut
-                ? "Sin existencias en la última actualización."
-                : `${availableStock} ${
-                    availableStock === 1
-                      ? "unidad disponible"
-                      : "unidades disponibles"
-                  }`
+              ? ""
               : hasPriceRange
                 ? "El precio cambia según la talla."
-                : "Selecciona una talla para consultar existencias."}
+                : "Selecciona tu talla."}
           </p>
-          {product.inventoryStale ? (
+          {lowStock ? (
             <p
               role="status"
-              className="mt-3 rounded-xl border border-gold/40 bg-gold/10 px-3 py-2 text-[11px] font-semibold text-ink"
+              className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-gold/15 px-3 py-1.5 text-[12px] font-bold text-ink"
             >
-              Mostrando el último respaldo validado porque el MCP no respondió.
+              <span aria-hidden="true" className="size-1.5 rounded-full bg-gold" />
+              ¡Últimas unidades! Escríbenos para apartarla.
             </p>
           ) : null}
 
           <fieldset className="mt-5">
             <legend className="text-[13px] font-bold text-ink">Talla</legend>
             <div className="mt-3 flex flex-wrap gap-2">
+              {/* Ninguna talla se tacha ni se bloquea: si no hay, lo dice la
+                  tienda por chat. Las que quedan pocas llevan un punto dorado
+                  para empujar la consulta. */}
               {product.variants.map((option) => {
                 const active = selectedVariant?.odooId === option.odooId;
-                const unavailable = option.stock <= 0;
+                const pocas = isLowStock(option);
 
                 return (
                   <button
@@ -197,28 +202,26 @@ export function ProductDrawer({
                       setAdded(false);
                     }}
                     aria-label={`Talla ${option.size}${
-                      unavailable ? ", sin existencias" : ""
+                      pocas ? ", últimas unidades" : ""
                     }`}
                     aria-pressed={active}
-                    className={`h-10 min-w-11 rounded-full border px-3 text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+                    className={`relative h-10 min-w-11 rounded-full border px-3 text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
                       active
                         ? "border-primary bg-primary text-white"
-                        : unavailable
-                          ? "border-border bg-surface text-muted line-through hover:border-primary/40"
-                          : "border-border bg-background text-ink hover:border-primary/40"
+                        : "border-border bg-background text-ink hover:border-primary/40"
                     }`}
                   >
                     {option.size}
+                    {pocas && !active ? (
+                      <span
+                        aria-hidden="true"
+                        className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-gold"
+                      />
+                    ) : null}
                   </button>
                 );
               })}
             </div>
-            {product.variants.some((variant) => variant.stock <= 0) ? (
-              <p className="mt-2 text-[11px] text-muted">
-                Las tallas tachadas no tienen existencias en la última
-                actualización.
-              </p>
-            ) : null}
             {error ? (
               <p role="alert" className="mt-3 text-[13px] font-semibold text-[#c82b31]">
                 Selecciona una talla para continuar.
@@ -233,7 +236,7 @@ export function ProductDrawer({
                 type="button"
                 aria-label="Quitar una unidad"
                 onClick={() => setQuantity((value) => Math.max(1, value - 1))}
-                disabled={!selectedVariant || soldOut || quantity <= 1}
+                disabled={!selectedVariant || quantity <= 1}
                 className="flex size-9 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-40"
               >
                 <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden="true" className="size-4">
@@ -250,7 +253,7 @@ export function ProductDrawer({
                   setQuantity((value) => Math.min(maximumQuantity, value + 1))
                 }
                 disabled={
-                  !selectedVariant || soldOut || quantity >= maximumQuantity
+                  !selectedVariant || quantity >= maximumQuantity
                 }
                 className="flex size-9 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-40"
               >
@@ -322,8 +325,11 @@ export function ProductDrawer({
         </div>
       </div>
 
-      {zoom ? (
-        <ImageLightbox product={product} onClose={() => setZoom(false)} />
+      {zoom && product.image ? (
+        <ImageLightbox
+          product={{ ...product, image: product.image }}
+          onClose={() => setZoom(false)}
+        />
       ) : null}
     </div>
   );
@@ -338,7 +344,8 @@ function ImageLightbox({
   product,
   onClose,
 }: {
-  product: Product;
+  /** Solo se monta desde el botón de ampliar, que exige que haya foto. */
+  product: Product & { image: string };
   onClose: () => void;
 }) {
   const boxRef = useOverlay<HTMLDivElement>({ open: true, onClose });

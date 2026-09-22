@@ -9,7 +9,7 @@ import { useCart } from "@/components/cart-provider";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { formatPrice, schoolName } from "@/data/products";
 import { pushDataLayer } from "@/lib/analytics";
-import { maxQuantityFor, prendas } from "@/lib/cart";
+import { CART_MAX_QUANTITY, isLowStock, prendas } from "@/lib/cart";
 import { PRODUCTS_PATH } from "@/lib/routes";
 import { useOverlay } from "@/lib/use-overlay";
 import { orderLinesFromCart, orderWhatsAppUrl } from "@/lib/whatsapp";
@@ -250,12 +250,13 @@ function CartRow({
   const size = line.variant?.size ?? line.stored.lastKnownSize;
   const school = line.product?.school ?? line.stored.lastKnownSchool;
   const tallaTexto = size || "única";
-  const tope = line.variant ? maxQuantityFor(line.variant) : line.quantity;
+  const tope = line.variant ? CART_MAX_QUANTITY : line.quantity;
+  const pocas = line.variant ? isLowStock(line.variant) : false;
 
   return (
     <li className="relative grid grid-cols-[64px_minmax(0,1fr)] gap-3 border-b border-border py-4 last:border-0">
       <span className="relative block h-20 w-16 overflow-hidden rounded-xl bg-card-media">
-        {line.product ? (
+        {line.product?.image ? (
           <Image
             src={line.product.image}
             alt=""
@@ -281,15 +282,11 @@ function CartRow({
             Ya no está en el catálogo. Quítala para continuar.
           </p>
         ) : null}
-        {line.status === "agotada" ? (
-          <p className="mt-1 text-[11px] font-semibold text-[#c82b31]">
-            Sin existencias en la última actualización. Puedes preguntar cuándo
-            vuelve.
-          </p>
-        ) : null}
-        {line.status === "ajustada" ? (
-          <p className="mt-1 text-[11px] font-semibold text-ink">
-            Ajustamos la cantidad a las {tope} unidades disponibles.
+        {/* Nunca decimos que algo se agotó: eso lo confirma la tienda. Lo único
+            que se anuncia es que quedan pocas, y solo si de verdad quedan. */}
+        {pocas ? (
+          <p className="mt-1 text-[11px] font-bold text-ink">
+            ¡Últimas unidades!
           </p>
         ) : null}
         {line.priceChanged && line.unitPrice !== null ? (
@@ -326,7 +323,7 @@ function CartRow({
                 type="button"
                 aria-label={`Agregar una unidad de ${name}, talla ${tallaTexto}`}
                 onClick={() => onQuantity(line.stored.odooId, line.quantity + 1)}
-                disabled={line.status === "agotada" || line.quantity >= tope}
+                disabled={line.quantity >= tope}
                 className="flex size-8 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-40"
               >
                 <svg

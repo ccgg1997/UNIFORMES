@@ -54,7 +54,8 @@ export function MobileCartAction() {
         href={PRODUCTS_PATH}
         className="btn btn-secondary h-12 flex-1 px-4 text-[13px]"
       >
-        Ver catálogo
+        <span className="sm:hidden">Catálogo</span>
+        <span className="hidden sm:inline">Ver catálogo</span>
       </Link>
     );
   }

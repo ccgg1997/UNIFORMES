@@ -32,7 +32,8 @@ export type StoredCart = {
   lines: StoredCartLine[];
 };
 
-export type CartLineStatus = "ok" | "ajustada" | "agotada" | "no-disponible";
+/** El catalogo no opina sobre existencias: solo importa si la prenda sigue publicada. */
+export type CartLineStatus = "ok" | "no-disponible";
 
 /** Línea ya reconciliada contra el catálogo: esto es lo que se pinta y cotiza. */
 export type CartLine = {
@@ -71,8 +72,6 @@ export type OrderLine = {
   school: SchoolId;
   size: string;
   price: number;
-  /** Existencias vivas; puede ser 0 o negativo (Odoo sobrevende). */
-  stock: number;
   quantity: number;
 };
 

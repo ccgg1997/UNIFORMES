@@ -134,9 +134,9 @@ function groupLines(sorted: OrderLine[]) {
   return groups;
 }
 
-/** "12 (x2)" y, si Odoo la da en cero o en negativo, "12 (x2, agotada)". */
+/** "12 (x2)". El mensaje no marca existencias: la tienda es quien confirma. */
 const sizeText = (row: OrderLine) =>
-  `${row.size || "única"} (x${row.quantity}${row.stock <= 0 ? ", agotada" : ""})`;
+  `${row.size || "única"} (x${row.quantity})`;
 
 function productLine(group: Group, withPrices: boolean) {
   const name = productLabel(group.head);
@@ -283,7 +283,6 @@ export function toOrderLine(
     school: product.school,
     size: variant.size,
     price: variant.price,
-    stock: variant.stock,
     quantity,
   };
 }

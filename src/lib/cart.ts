@@ -38,10 +38,26 @@ export function availableStock(variant: ProductVariant) {
   return Math.max(0, Math.floor(variant.stock));
 }
 
-/** El mismo tope para el drawer y para el carrito, en un solo sitio. */
-export function maxQuantityFor(variant: ProductVariant) {
-  return Math.max(1, Math.min(CART_MAX_QUANTITY, availableStock(variant)));
+/**
+ * A partir de aquí la talla muestra "últimas unidades". Es un empujón para que
+ * el cliente escriba, no un dato de inventario: por eso solo aplica con
+ * existencias reales. Con 0 no se dice nada — anunciar "últimas unidades" de
+ * algo agotado sería la misma clase de afirmación falsa que la tienda tiene
+ * que desmentir por chat.
+ */
+export const LOW_STOCK_THRESHOLD = 3;
+
+export function isLowStock(variant: ProductVariant) {
+  const stock = availableStock(variant);
+  return stock > 0 && stock <= LOW_STOCK_THRESHOLD;
 }
+
+/*
+ * No hay tope por existencias: quien confirma disponibilidad es la tienda por
+ * WhatsApp, y recortar la cantidad aquí sería afirmar en silencio que no hay,
+ * que es justo lo que el catálogo no debe hacer. El único tope es
+ * CART_MAX_QUANTITY, que solo evita cantidades absurdas.
+ */
 
 export type VariantHit = { product: Product; variant: ProductVariant };
 
@@ -69,10 +85,7 @@ export function createStoredLine(
 ): StoredCartLine {
   return {
     odooId: variant.odooId,
-    quantity: Math.max(
-      1,
-      Math.min(maxQuantityFor(variant), Math.floor(quantity)),
-    ),
+    quantity: Math.max(1, Math.min(CART_MAX_QUANTITY, Math.floor(quantity))),
     addedAt: Date.now(),
     lastKnownProductId: product.id,
     lastKnownName: product.name,
@@ -111,17 +124,8 @@ export function reconcileCart(
     }
 
     const { product, variant } = hit;
-    const soldOut = availableStock(variant) <= 0;
-    // El recorte es de solo lectura: lo guardado es la intención del cliente y
-    // vuelve a valer sola si mañana entra mercancía.
-    const quantity = soldOut
-      ? line.quantity
-      : Math.min(line.quantity, maxQuantityFor(variant));
-    const status: CartLineStatus = soldOut
-      ? "agotada"
-      : quantity < line.quantity
-        ? "ajustada"
-        : "ok";
+    const quantity = Math.min(line.quantity, CART_MAX_QUANTITY);
+    const status: CartLineStatus = "ok";
 
     return {
       key: String(line.odooId),

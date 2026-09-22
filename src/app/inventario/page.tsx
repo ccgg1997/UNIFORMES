@@ -30,6 +30,18 @@ export default async function InventarioPage() {
     .map((product) => product.odooName)
     .filter((odooName) => !conFicha.has(odooName));
 
+  // Odoo llega alfabético, que no es como la tienda revisa el inventario. Se
+  // usa el orden de productDefinitions (Comfandi, luego Arquidiocesanos por
+  // uso); lo que todavía no tiene ficha queda al final, no mezclado.
+  const orden = new Map(
+    productDefinitions.map((definition, index) => [definition.odooName, index]),
+  );
+  const ordenados = [...products].sort(
+    (a, b) =>
+      (orden.get(a.odooName) ?? Number.MAX_SAFE_INTEGER) -
+      (orden.get(b.odooName) ?? Number.MAX_SAFE_INTEGER),
+  );
+
   return (
     <section className="min-h-[70svh] bg-surface-blue py-10 lg:py-14">
       <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
@@ -82,7 +94,7 @@ export default async function InventarioPage() {
         ) : null}
 
         <div className="mt-8 space-y-6">
-          {products.map((product) => (
+          {ordenados.map((product) => (
             <div
               key={product.odooName}
               className="overflow-hidden rounded-2xl border border-card-border bg-background"
@@ -97,17 +109,27 @@ export default async function InventarioPage() {
                 </p>
               </div>
 
+              {/* Sin min-width y con las dos columnas numéricas ajustadas a su
+                  contenido: en móvil la talla ya no queda a un lado de la
+                  pantalla y la cantidad y el precio a kilómetros, con el hueco
+                  en la mitad. El sobrante lo absorbe la columna de la talla. */}
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[380px] border-collapse text-left">
+                <table className="w-full border-collapse text-left">
                   <thead>
                     <tr className="text-[11px] font-bold uppercase tracking-[0.06em] text-muted">
                       <th scope="col" className="px-4 py-2 sm:px-5">
                         Talla
                       </th>
-                      <th scope="col" className="px-4 py-2 text-right sm:px-5">
+                      <th
+                        scope="col"
+                        className="w-px whitespace-nowrap px-3 py-2 text-right sm:px-5"
+                      >
                         Cantidad
                       </th>
-                      <th scope="col" className="px-4 py-2 text-right sm:px-5">
+                      <th
+                        scope="col"
+                        className="w-px whitespace-nowrap px-4 py-2 text-right sm:px-5"
+                      >
                         Precio
                       </th>
                     </tr>
@@ -125,13 +147,13 @@ export default async function InventarioPage() {
                           {size.size}
                         </th>
                         <td
-                          className={`px-4 py-2.5 text-right font-bold tabular-nums sm:px-5 ${
+                          className={`w-px whitespace-nowrap px-3 py-2.5 text-right font-bold tabular-nums sm:px-5 ${
                             size.stock <= 0 ? "text-[#c82b31]" : "text-ink"
                           }`}
                         >
                           {size.stock}
                         </td>
-                        <td className="px-4 py-2.5 text-right tabular-nums text-muted sm:px-5">
+                        <td className="w-px whitespace-nowrap px-4 py-2.5 text-right tabular-nums text-muted sm:px-5">
                           {formatPrice(size.price)}
                         </td>
                       </tr>

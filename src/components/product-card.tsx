@@ -10,11 +10,9 @@ export function ProductCard({
   product: Product;
   onSelect: (product: Product) => void;
 }) {
-  const availableVariants = product.variants.filter((variant) => variant.stock > 0);
-  const pricedVariants = availableVariants.length
-    ? availableVariants
-    : product.variants;
-  const prices = pricedVariants.map((variant) => variant.price);
+  // Todas las tallas cuentan para el "Desde": el precio no debe moverse porque
+  // una talla se haya agotado.
+  const prices = product.variants.map((variant) => variant.price);
   const minimumPrice = Math.min(...prices);
   const hasPriceRange = prices.some((price) => price !== minimumPrice);
 
@@ -29,13 +27,17 @@ export function ProductCard({
       </span>
 
       <span className="relative mt-3 block aspect-4/5 w-full overflow-hidden rounded-xl bg-card-media">
-        <Image
-          src={product.image}
-          alt={`${product.name}, uniforme escolar de ${schoolName(product.school)}`}
-          fill
-          sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, (max-width: 1280px) 24vw, 220px"
-          className="object-contain transition-transform duration-200 group-hover:scale-[1.02]"
-        />
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={`${product.name}, uniforme escolar de ${schoolName(product.school)}`}
+            fill
+            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, (max-width: 1280px) 24vw, 220px"
+            className="object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+          />
+        ) : (
+          <PhotoPending />
+        )}
       </span>
 
       <span className="mt-4 block text-[13px] leading-snug text-ink">
@@ -62,5 +64,33 @@ export function ProductCard({
         </svg>
       </span>
     </button>
+  );
+}
+
+/**
+ * Marcador para una prenda que ya se vende pero todavía no tiene foto propia.
+ * Se prefiere esto antes que dejar un <img> roto —o, peor, usar la foto de
+ * producto de otra tienda.
+ */
+export function PhotoPending() {
+  return (
+    <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-3 text-center">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        className="size-8 text-primary/40"
+      >
+        <path d="M8 3.5 4 5.5v4h2.5V20h11V9.5H20v-4l-4-2" />
+        <path d="M8 3.5a4 4 0 0 0 8 0" />
+      </svg>
+      <span className="text-[10px] font-semibold leading-tight text-muted">
+        Foto en camino
+      </span>
+    </span>
   );
 }

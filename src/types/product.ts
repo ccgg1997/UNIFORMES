@@ -33,7 +33,12 @@ export type ProductDefinition = {
    */
   name: string;
   school: SchoolId;
-  image: string;
+  /**
+   * Opcional: una prenda puede publicarse antes de tener foto propia. Sin
+   * imagen se dibuja un marcador neutro — nunca se toma prestada la foto de
+   * otra tienda ni se deja un <img> roto.
+   */
+  image?: string;
   /** Nombre exacto del producto en Odoo, sin la talla. */
   odooName: string;
   /** Aclaración de una línea. Solo UI: nunca viaja en el mensaje de WhatsApp. */

@@ -29,59 +29,22 @@ export const schools: School[] = [
  * que corregir por chat a una clienta que pidio un "pantalon azul" que no
  * existe: en Odoo esa prenda es la SUDADERA COMFANDI.
  */
+/**
+ * El orden manda: asi se recorre el carrusel de Inicio, asi se lista /productos
+ * y asi se ordena /inventario. Agrupado como lo pide la tienda: primero
+ * Comfandi (camibuso y sudadera) y luego Arquidiocesanos por uso — educacion
+ * fisica, uniforme diario de nina y uniforme diario de nino.
+ *
+ * Esta lista solo define metadatos de presentacion. Tallas, precios y
+ * existencias se resuelven exclusivamente desde Odoo mediante `odooName`.
+ *
+ * El nombre comercial parte del sustantivo que usa Odoo —que es el que usa la
+ * tienda al responder por WhatsApp— y nunca lleva el colegio. La tienda tuvo
+ * que corregir por chat a una clienta que pidio un "pantalon azul" que no
+ * existe: en Odoo esa prenda es la SUDADERA COMFANDI.
+ */
 export const productDefinitions: ProductDefinition[] = [
-  {
-    id: "arqui-camisa-educacion-fisica",
-    name: "Camisa de Educación Física",
-    school: "arquidiocesanos",
-    image: "/images/productos/arqui-camisa-educacion-fisica.webp",
-    odooName: "CAMISA UNISEX ED. FISICA",
-    descriptor: "Unisex. Amarilla, con mangas y cuello azul oscuro.",
-    searchAliases: [
-      "camiseta educacion fisica",
-      "camiseta amarilla",
-      "camibuso educacion fisica",
-      "camisa unisex",
-      "deportes",
-    ],
-  },
-  {
-    id: "arqui-sudadera-educacion-fisica",
-    name: "Sudadera de Educación Física",
-    school: "arquidiocesanos",
-    image: "/images/productos/arqui-sudadera-educacion-fisica.webp",
-    odooName: "SUDADERA ED. FISICA ARQUIDIOCESANOS",
-    // Describe SOLO lo que se ve en la foto: no afirmamos si la referencia
-    // incluye chaqueta mientras la tienda no lo confirme.
-    descriptor: "Azul oscuro, con franja amarilla a los lados.",
-    searchAliases: [
-      "pantalon sudadera",
-      "pantalon educacion fisica",
-      "sudadera azul",
-      "deportes",
-    ],
-  },
-  {
-    id: "arqui-jardinera",
-    name: "Jardinera",
-    school: "arquidiocesanos",
-    image: "/images/productos/arqui-jardinera.webp",
-    odooName: "JARDINERA NIÑA",
-    // Recupera la venta de la blusa mientras no tengamos su foto: en Odoo hay
-    // 187 unidades y todavia no tiene ficha propia (ver /inventario).
-    descriptor:
-      "Uniforme diario de niña, a cuadros azules. Se usa con la blusa blanca debajo; pregúntanos por ella.",
-    searchAliases: [
-      "jardinera diaria",
-      "jardinera niña",
-      "vestido",
-      "falda",
-      "uniforme diario niña",
-      "blusa",
-      "blusa blanca",
-      "camisa niña",
-    ],
-  },
+  // --- Comfandi -----------------------------------------------------------
   {
     id: "comfandi-camibuso",
     name: "Camibuso",
@@ -105,7 +68,7 @@ export const productDefinitions: ProductDefinition[] = [
     school: "comfandi",
     image: "/images/productos/comfandi-sudadera.webp",
     odooName: "SUDADERA COMFANDI",
-    // Mismo pendiente que la sudadera de Arqui: no afirmamos si trae chaqueta.
+    // No afirmamos si la referencia trae chaqueta: eso lo confirma la tienda.
     descriptor: "Azul rey, con el logo de Comfandi.",
     searchAliases: [
       "pantalon azul",
@@ -114,6 +77,76 @@ export const productDefinitions: ProductDefinition[] = [
       "pantalon de sudadera",
     ],
   },
+
+  // --- Arquidiocesanos · educacion fisica ---------------------------------
+  {
+    id: "arqui-sudadera-educacion-fisica",
+    name: "Sudadera de Educación Física",
+    school: "arquidiocesanos",
+    image: "/images/productos/arqui-sudadera-educacion-fisica.webp",
+    odooName: "SUDADERA ED. FISICA ARQUIDIOCESANOS",
+    // Mismo pendiente que la sudadera Comfandi: solo describimos la foto.
+    descriptor: "Azul oscuro, con franja amarilla a los lados.",
+    searchAliases: [
+      "pantalon sudadera",
+      "pantalon educacion fisica",
+      "sudadera azul",
+      "deportes",
+    ],
+  },
+  {
+    id: "arqui-camisa-educacion-fisica",
+    name: "Camisa de Educación Física",
+    school: "arquidiocesanos",
+    image: "/images/productos/arqui-camisa-educacion-fisica.webp",
+    odooName: "CAMISA UNISEX ED. FISICA",
+    descriptor: "Unisex. Amarilla, con mangas y cuello azul oscuro.",
+    searchAliases: [
+      "camiseta educacion fisica",
+      "camiseta amarilla",
+      "camibuso educacion fisica",
+      "camisa unisex",
+      "deportes",
+    ],
+  },
+
+  // --- Arquidiocesanos · uniforme diario de nina --------------------------
+  {
+    id: "arqui-jardinera",
+    name: "Jardinera",
+    school: "arquidiocesanos",
+    image: "/images/productos/arqui-jardinera.webp",
+    odooName: "JARDINERA NIÑA",
+    descriptor:
+      "Uniforme diario de niña, a cuadros azules. Se usa con la blusa blanca debajo.",
+    searchAliases: [
+      "jardinera diaria",
+      "jardinera niña",
+      "vestido",
+      "falda",
+      "uniforme diario niña",
+    ],
+  },
+  {
+    id: "arqui-blusa-diario",
+    name: "Blusa Diario",
+    school: "arquidiocesanos",
+    // PENDIENTE: falta la foto propia. Cuando exista, guardarla en
+    // public/images/productos/arqui-blusa-diario.webp y descomentar la linea.
+    // image: "/images/productos/arqui-blusa-diario.webp",
+    odooName: "BLUSA DIARIO NIÑA (DEBAJO)",
+    descriptor:
+      "Blanca, de manga corta, con vivos oscuros en los puños. Va debajo de la jardinera.",
+    searchAliases: [
+      "blusa",
+      "blusa blanca",
+      "camisa niña",
+      "blusa debajo",
+      "uniforme diario niña",
+    ],
+  },
+
+  // --- Arquidiocesanos · uniforme diario de nino --------------------------
   {
     id: "arqui-guayabera-gruesa",
     name: "Guayabera (tela gruesa)",
@@ -146,19 +179,6 @@ export const productDefinitions: ProductDefinition[] = [
     ],
   },
 ];
-
-// BLUSA DIARIO NIÑA (DEBAJO) esta publicada en Odoo (10 tallas, 187 unidades)
-// y NO esta excluida: sale completa en /inventario, marcada como "sin ficha en
-// la web". Lo unico que falta es la foto. Cuando llegue, se descomenta:
-// {
-//   id: "arqui-blusa-diario",
-//   name: "Blusa Diario",
-//   school: "arquidiocesanos",
-//   image: "/images/productos/arqui-blusa-diario.webp",
-//   odooName: "BLUSA DIARIO NIÑA (DEBAJO)",
-//   descriptor: "Blanca, se usa debajo de la jardinera.",
-//   searchAliases: ["blusa blanca", "camisa niña", "blusa debajo"],
-// },
 
 export function schoolName(id: SchoolId) {
   return schools.find((school) => school.id === id)?.name ?? id;

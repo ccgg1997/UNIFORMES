@@ -71,11 +71,13 @@ export function Header() {
           })}
         </nav>
 
+        {/* En móvil los dos van como icono: el CTA con texto completo ya vive
+            en la barra fija inferior, y con la marca al lado no caben sin
+            desbordar la pantalla. */}
         <div className="ml-auto flex items-center gap-2 md:ml-8 md:gap-3">
           <CartButton />
-          <WhatsAppButton className="btn btn-primary h-10 px-4 text-[13px] md:h-12 md:px-6 md:text-sm">
-            <span className="hidden sm:inline">Consultar por WhatsApp</span>
-            <span className="sm:hidden">WhatsApp</span>
+          <WhatsAppButton className="btn btn-primary size-10 shrink-0 p-0 md:h-12 md:w-auto md:px-6 md:text-sm">
+            <span className="sr-only md:not-sr-only">Consultar por WhatsApp</span>
           </WhatsAppButton>
         </div>
       </div>

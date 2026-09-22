@@ -11,9 +11,9 @@ import {
 } from "react";
 
 import {
+  CART_MAX_QUANTITY,
   createStoredLine,
   indexVariants,
-  maxQuantityFor,
   reconcileCart,
 } from "@/lib/cart";
 import * as cartStore from "@/lib/cart-store";
@@ -91,7 +91,7 @@ export function CartProvider({
     (product: Product, variant: ProductVariant, quantity: number) => {
       cartStore.addLine(
         createStoredLine(product, variant, quantity),
-        maxQuantityFor(variant),
+        CART_MAX_QUANTITY,
       );
       announce(
         `${product.name}, talla ${variant.size || "única"}, agregada al carrito.`,
@@ -106,7 +106,7 @@ export function CartProvider({
       // Sin variante viva no hay tope que respetar: lo único razonable sobre
       // una línea huérfana es quitarla.
       if (!hit) return;
-      cartStore.setQuantity(odooId, quantity, maxQuantityFor(hit.variant));
+      cartStore.setQuantity(odooId, quantity, CART_MAX_QUANTITY);
     },
     [index],
   );
